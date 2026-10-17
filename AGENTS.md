@@ -51,6 +51,13 @@ curl -sS -X POST http://localhost:8086/eval/ -H "Content-Type: application/json"
   kill `PharoConsole.exe`, have the user relaunch the desktop, then
   verify the bridge reaches the real world (`/read-screen` bounds should
   match the actual screen before trusting any GUI-visible change).
+- **Fastest visual confirmation that the bridge reaches the world the
+  user is watching: cycle the world color** —
+  `World color: Color red.` followed by restoring it. If the user's
+  desktop flashes, the connection is live and attached to the right
+  process; evals alone can never prove that (they succeed against a
+  phantom world too). Use this before trusting any GUI-visible change
+  after a VM restart or hand-off.
 
 ## Talking to the image
 
