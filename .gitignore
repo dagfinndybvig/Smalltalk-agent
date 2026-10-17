@@ -1,0 +1,19 @@
+# Live image state - never commit
+*.image
+*.changes
+*.sources
+PharoDebug.log
+
+# VM and launchers (regenerable: curl -sS -L https://get.pharo.org/64/stable+vm | sh)
+pharo-vm/
+pharo
+pharo-ui
+pharo-local
+
+# Image snapshots (whole-world backups)
+snapshots/
+*.image.bak*
+*.changes.bak*
+
+# Scratch
+*.json.tmp

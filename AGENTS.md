@@ -1,0 +1,93 @@
+# AGENTS.md — Reverse Smalltalk (Agentic PoC)
+
+This directory contains a live Pharo 13 image under agentic control. Read this
+before doing anything here.
+
+## Environment model
+
+- `Pharo.image` + `Pharo.changes` are **live state**, not artifacts. They hold
+  running processes, the loaded SIS server, and any classes created at runtime.
+- The image normally runs headless as a long-lived process, with
+  `PharoSmalltalkInteropServer` (SIS) on **http://localhost:8086**.
+- Source of truth for anything durable should be Tonel export (via SIS) or a
+  fileout — do not assume the image contents are reproducible.
+
+## Server lifecycle
+
+Check whether the image is running before anything else:
+
+```
+curl -sS -X POST http://localhost:8086/eval/ -H "Content-Type: application/json" -d '{"code":"Smalltalk version"}'
+```
+
+- **If running:** use it. Do not start a second instance (the image files are
+  single-writer; a second VM on the same image corrupts state).
+- **If not running:** start it, ideally as a background process:
+  `./pharo --headless Pharo.image st keepalive.st` from this directory, or
+  `start-pharo-server.cmd` on Windows. Wait a few seconds, then verify the
+  eval endpoint responds.
+- Never launch the GUI (`pharo-ui`) from an agent session.
+
+## Talking to the image
+
+Preferred order: MCP tools (`smalltalk-interop` server: `eval`,
+`get_class_source`, `get_method_source`, `search_*`, `run_*_test`, ...) if
+registered in this session; otherwise the HTTP API directly.
+
+For any eval payload containing Smalltalk quotes, **write the JSON body to a
+temporary file and use `curl --data-binary @file`**. Inline shell quoting is
+brittle on Windows and has already caused two spurious failures here.
+
+Key endpoints (all return JSON with `success`, and on failure a structured
+`error` with `description`, `stack_trace`, and `receiver` including its
+instance variables — read these, they are the debugger):
+
+| Endpoint | Purpose |
+|---|---|
+| `POST /eval/` `{"code": "..."}` | Evaluate Smalltalk |
+| `GET /get-class-source?class_name=X` | Class definition source |
+| `GET /get-method-source?class_name=X&method_name=y` | Method source |
+| `GET /search-classes-like?class_name_query=X` / `search-methods-like`, `search-implementors`, `search-references` | Navigation |
+| `GET /list-packages` / `export-package` / `import-package` | Tonel in/out |
+| `GET /run-package-test?package_name=X` / `run-class-test` | Tests |
+| `GET /install-project` | Metacello install |
+
+## Pharo 13 rules (learned the hard way — do not repeat these mistakes)
+
+1. **Class creation is the fluid builder API only.** The classic
+   `Object subclass: #Foo instanceVariableNames: '' ... package: 'P'` and
+   `subclass:package:` selectors were removed in Pharo 13. Use:
+   ```smalltalk
+   Object << #ClassName slots: {}; package: 'PackageName'; install
+   ```
+   The class does not exist until `install` is sent.
+
+2. **One eval is compiled before any of it runs.** You cannot create a class
+   and use its name in the same eval — the compiler resolves globals at
+   parse time and reports "Undeclared variable". Send a second eval.
+
+3. **String literals use single quotes.** `''` is the empty string; `""` is a
+   comment. `''string in a string''` doubles embedded quotes.
+
+4. **Eval results must be JSON-serializable.** SIS cannot map arbitrary
+   objects (`ShiftClassBuilder`, class objects) and reports
+   `"JSON mapping not found for: X"` even though the code ran. End evals with
+   a symbol, string, or number: `... install. #created`.
+
+5. `crLog` does not exist in Pharo 13; use `traceCr` or `Transcript`.
+
+## Safety
+
+- The eval endpoint executes arbitrary code in a live system. Before risky
+   operations (package loads, bulk refactoring, anything destructive),
+   snapshot by copying `Pharo.image` and `Pharo.changes` to a backup name;
+   restore by copying back while the image is stopped.
+- Do not commit `Pharo.image` / `Pharo.changes` / `PharoDebug.log` to
+  version control.
+- Prefer small, idempotent evals over large scripts.
+
+## Reference
+
+- SIS backend: https://github.com/mumez/PharoSmalltalkInteropServer
+- MCP wrapper: https://github.com/mumez/smalltalk-interop-mcp-server
+- Human-facing overview: README.md; roadmap: TODO.md

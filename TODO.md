@@ -1,0 +1,59 @@
+# TODO — Reverse Smalltalk
+
+Roadmap from working PoC (done) toward a real agentic Smalltalk environment.
+Items are roughly ordered; see README.md for the architecture.
+
+## Done
+
+- [x] Pharo 13 image + VM, SIS loaded, headless server on port 8086
+- [x] MCP bridge (`smalltalk-interop-mcp-server`) verified end-to-end
+- [x] MCP server registered in Vibe (`~/.vibe/config.toml`)
+- [x] Live demo: class created, method compiled and executed, source read back
+- [x] README.md / AGENTS.md documenting the setup and the Pharo 13 rules
+
+## Near term — harden the PoC
+
+- [ ] Trust `C:\Users\dybvig\Reverse\Smalltalk` in Vibe (accept prompt on next
+      launch) so project-local `.vibe/` config and skills are loaded
+- [ ] Verify the `smalltalk-interop` MCP tools appear in a fresh Vibe session
+      (`/mcp` status), and run a real coding task through them
+- [ ] Snapshot/restore as an agent tool: script that copies
+      `Pharo.image`/`Pharo.changes` to a timestamped backup and restores it;
+      expose via MCP or SIS endpoint
+- [ ] Durable source of truth: export `AgenticDemo` (and future work) as
+      Tonel files into a `src/` tree; decide on git + Iceberg vs plain Tonel
+- [ ] A `restart-server.cmd` / health-check helper (is the image up? port
+      8086 listening?)
+- [ ] Decide image lifecycle: auto-start on boot (Task Scheduler / nssm as a
+      Windows service) vs on-demand by the agent
+
+## Mid term — better agent ergonomics
+
+- [ ] Write a Vibe skill encoding the Pharo 13 rules (the AGENTS.md section)
+      so any agent session in this folder gets them automatically
+- [ ] Evaluate mumez/smalltalk-dev-plugin (Claude Code plugin format) —
+      port or reuse its Smalltalk skills
+- [ ] Structured failure workflows: on error, auto-fetch receiver/stack via
+      the error JSON; try a "define, then use" retry pattern automatically
+- [ ] Test-runner integration: `run_package_test` output shaping, red-green
+      loop conventions for agent-driven TDD
+- [ ] Explore `read_screen` (UI debugging) — agent-driven UI development with
+      Spec/Morphic screenshots
+- [ ] Evaluate mumez/pharo-agentic-browser as a full workspace UI / whether
+      to stay with plain MCP tools
+
+## Long term — the "Reverse" direction
+
+- [ ] Squeak interop: SIS v4 also supports Squeak — decide whether the
+      PoC should target both dialects
+- [ ] Debugger control as agent tools: capture context chains on halt/error,
+      inspect live objects in frames, proceed/restart programmatically
+      (this is the biggest gap in the current SIS API)
+- [ ] Whole-world undo as a first-class primitive: named checkpoints of the
+      image, agent-visible, with rollback cost measured in file copy
+- [ ] Study the Squeak/Pharo VM and SIS server implementation in depth as
+      reverse-engineering targets: what would our own Smalltalk do
+      differently if the agent bridge were a VM-level primitive from
+      day one?
+- [ ] Design notes for an agent-native Smalltalk: sandboxed eval, structured
+      error protocol, image/segment snapshot API, transcript as a channel
