@@ -84,6 +84,23 @@ SierpinskiCarpet >> initializeLevel: aLevel size: aSize [
 ]
 
 { #category : 'as yet unclassified' }
+SierpinskiCarpet >> openCarpetView [
+	"Draw the carpet and open it maximized, filling the screen."
+	| pitch canvas window |
+	pitch := 40.
+	canvas := RSCanvas new.
+	canvas color: Color white.
+	cells do: [ :p |
+		canvas add: (RSBox new
+			size: pitch - 6;
+			color: Color black;
+			position: (p x * pitch) @ (p y negated * pitch)) ].
+	window := canvas open.
+	window maximize.
+	^ window
+]
+
+{ #category : 'as yet unclassified' }
 SierpinskiCarpet >> render [
     | form canvas |
     form := Form extent: size asPoint depth: 32.
