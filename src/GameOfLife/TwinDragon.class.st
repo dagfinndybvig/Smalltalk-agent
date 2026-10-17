@@ -47,12 +47,13 @@ TwinDragon >> initializeFirst: one second: two [
 
 { #category : 'as yet unclassified' }
 TwinDragon >> openTwinDragonView [
-	"Render both dragon curves to a Form scaled to fill the Pharo world.
+	"Render both dragon curves to a Form at a comfortable size, centered.
 	The first dragon in black, its twin in red."
 	| margin usable box scale offset form canvas window all |
 	all := curveOne, curveTwo.
 	margin := 20.
-	usable := (World extent x - (2 * margin)) @ (World extent y - 72 - (2 * margin)).
+	usable := ((World extent x - (2 * margin)) @ (World extent y - 72 - (2 * margin))) * 0.75.
+	usable := usable x asInteger @ usable y asInteger.
 	box := Rectangle encompassing: all.
 	scale := ((usable x / box width) min: (usable y / box height)) max: 1.
 	offset := box origin negated * scale.
@@ -66,6 +67,6 @@ TwinDragon >> openTwinDragonView [
 	window addMorph: (ImageMorph new form: form) frame: (0 @ 0 corner: 1 @ 1).
 	window extent: form extent + (12 @ 48).
 	window openInWorld.
-	window position: ((World extent x - window extent x) // 2) @ 18.
+	window position: ((World extent x - window extent x) // 2) @ ((World extent y - window extent y) // 2).
 	^ window
 ]
