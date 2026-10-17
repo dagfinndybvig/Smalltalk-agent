@@ -18,7 +18,7 @@ Checking image server... up
 
 == Run tests BEFORE implementation (expect RED)
    GET /run-class-test?class_name=GameOfLifeTest
-   -> {"result": "5 ran, 0 passed, 0 skipped, 0 expected failures, 0 failures, 5 errors, 0 passed unexpected\rFailures:\r\rErrors:\rGameOfLifeTest>>#testBlinkerOscillates\rGameOfLifeTest>>#testLonelyCellDies\rGameOfLifeTest>>#testOvercrowdedCellDies\rGameOfLifeTest>>#testCellWithThreeNeighboursIsBorn\rGameOfLifeTest>>#testBlockIsStillLife\r", "success": true}
+   -> {"result": "5 ran, 0 passed, 0 skipped, 0 expected failures, 0 failures, 5 errors, 0 passed unexpected\rFailures:\r\rErrors:\rGameOfLifeTest>>#testLonelyCellDies\rGameOfLifeTest>>#testCellWithThreeNeighboursIsBorn\rGameOfLifeTest>>#testBlockIsStillLife\rGameOfLifeTest>>#testOvercrowdedCellDies\rGameOfLifeTest>>#testBlinkerOscillates\r", "success": true}
 
 == Compile the evolution rules: neighbours + nextGeneration
    POST /eval/  <- demo/05-compile-evolution.json
@@ -51,14 +51,28 @@ Checking image server... up
    GET /run-class-test?class_name=GameOfLifeTest
    -> {"result": "7 ran, 7 passed, 0 skipped, 0 expected failures, 0 failures, 0 errors, 0 passed unexpected\rFailures:\r\rErrors:\r", "success": true}
 
+== Build the inside-out agent (AgentSession) - inert without MISTRAL_API_KEY
+   POST /eval/  <- demo/agent-00-create.json
+   -> {"result": "created", "success": true}
+   POST /eval/  <- demo/agent-01-core.json
+   -> {"result": "agentCore1", "success": true}
+   POST /eval/  <- demo/agent-02-api.json
+   -> {"result": "agentCore2", "success": true}
+   POST /eval/  <- demo/agent-03-loop.json
+   -> {"result": "agentCore3", "success": true}
+   POST /eval/  <- demo/agent-04-tools.json
+   -> {"result": "agentCore4", "success": true}
+
 == Export durable sources (Tonel) into src/
    GET /export-package?package_name=GameOfLife&path=src/
    -> {"result": "GameOfLife exported to: <repo>/src", "success": true}
    GET /export-package?package_name=GameOfLife-Tests&path=src/
    -> {"result": "GameOfLife-Tests exported to: <repo>/src", "success": true}
+   GET /export-package?package_name=AgentTerminal&path=src/
+   -> {"result": "AgentTerminal exported to: <repo>/src", "success": true}
 
 == Save the image (work survives VM restarts)
    POST /eval/  <- demo/06-save-image.json
    -> {"result": "imageSaved", "success": true}
 
-Done. Live classes: GameOfLife, GameOfLifeTest (+ Gosper glider gun). Sources in src/.
+Done. Live classes: GameOfLife, GameOfLifeTest (+ Gosper gun, + AgentSession in-image agent). Sources in src/.

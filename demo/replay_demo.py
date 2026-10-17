@@ -115,7 +115,7 @@ def main():
 
     if not args.no_export:
         print("\n== Export durable sources (Tonel) into src/")
-        for package in ("GameOfLife", "GameOfLife-Tests"):
+        for package in ("GameOfLife", "GameOfLife-Tests", "AgentTerminal"):
             path = SRC.as_posix()
             r = get(args.port, f"export-package?package_name={package}&path={path}")
             print(f"   GET /export-package?package_name={package}&path=src/")
