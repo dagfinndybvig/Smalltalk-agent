@@ -25,6 +25,12 @@ Items are roughly ordered; see README.md for the architecture.
 - [ ] Decide image lifecycle: auto-start on boot (Task Scheduler / nssm as a
       Windows service) vs on-demand by the agent
 
+## Before going public (LinkedIn / GitHub)
+
+- [ ] Choose a license (bridge stack is mumez's; our repo needs its own)
+- [ ] Record a screen/asciinema capture of `demo/replay_demo.py` for the post
+- [ ] Tag a release (v0.1.0) once MCP tools are verified in a fresh session
+
 ## Mid term — better agent ergonomics
 
 - [ ] Write a Vibe skill encoding the Pharo 13 rules (the AGENTS.md section)

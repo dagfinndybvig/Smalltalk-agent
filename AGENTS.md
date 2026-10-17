@@ -49,6 +49,14 @@ instance variables — read these, they are the debugger):
 | `GET /get-method-source?class_name=X&method_name=y` | Method source |
 | `GET /search-classes-like?class_name_query=X` / `search-methods-like`, `search-implementors`, `search-references` | Navigation |
 | `GET /list-packages` / `export-package` / `import-package` | Tonel in/out |
+
+`export-package` takes `package_name` + `path` (target directory, it
+creates a `path/<package>/` tree). `import-package` takes `package_name`
++ `path` where `path` is the **parent** directory of the package — this
+differs from the example in the upstream API.md, which is misleading.
+When an endpoint 500s on a missing param, read the handler source live:
+`GET /get-method-source?class_name=SisServer&method_name=handleX:` —
+the image is the authority, not the docs.
 | `GET /run-package-test?package_name=X` / `run-class-test` | Tests |
 | `GET /install-project` | Metacello install |
 

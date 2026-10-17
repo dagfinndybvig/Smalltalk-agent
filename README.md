@@ -137,6 +137,38 @@ This rolls back *everything* — all classes, methods, running processes,
 objects — in one file copy. No other development environment gives an
 agent that.
 
+## Rebuilding the environment from scratch
+
+The live image files are intentionally not in git (single-writer, ~50 MB,
+unmergeable). Everything needed to reconstruct the environment is:
+
+```bash
+# 1. Pharo 13 image + VM (zeroconf installer)
+curl -sS -L https://get.pharo.org/64/stable+vm | sh
+
+# 2. Load SIS into the image (auto-starts on 8086 now and on every boot)
+./pharo Pharo.image metacello install \
+  github://mumez/PharoSmalltalkInteropServer:main/src \
+  BaselineOfPharoSmalltalkInteropServer
+
+# 3. Start the headless server
+./pharo --headless Pharo.image st keepalive.st
+```
+
+The MCP server needs no install at all — it is fetched on demand by
+`uvx` (requires Python 3.10+ and [uv](https://docs.astral.sh/uv/)).
+
+To restore previously developed code into a fresh image, import the
+Tonel sources from `src/` (`path` is the *parent* directory; the package
+is selected by `package_name` — the upstream API.md example is
+misleading about this):
+
+```
+GET /import-package?package_name=GameOfLife&path=<repo>/src
+```
+
+(or re-run `demo/replay_demo.py`, which rebuilds everything live).
+
 ## Why this matters
 
 Smalltalk is uniquely suited to agentic control because the tools *are* the
