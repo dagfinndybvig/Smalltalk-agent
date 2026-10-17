@@ -27,7 +27,7 @@ Items are roughly ordered; see README.md for the architecture.
 
 ## Before going public (LinkedIn / GitHub)
 
-- [ ] Choose a license (bridge stack is mumez's; our repo needs its own)
+- [x] Choose a license — MIT (see LICENSE)
 - [ ] Record a screen/asciinema capture of `demo/replay_demo.py` for the post
 - [ ] Tag a release (v0.1.0) once MCP tools are verified in a fresh session
 

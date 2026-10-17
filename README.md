@@ -194,3 +194,9 @@ The bridge stack is existing work, not ours:
 
 This repo is the proof of concept and staging ground for our own deeper
 integration work (see TODO.md).
+
+## License
+
+MIT — see [LICENSE](LICENSE). The bridge components above are separate
+projects with their own licenses; this repository contains only our own
+code, docs, and demo payloads.
