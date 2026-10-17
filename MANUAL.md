@@ -164,6 +164,7 @@ Because of that, there are two safety nets:
    ```bash
    curl "http://localhost:8086/import-package?package_name=GameOfLife&path=<this-folder>/src"
    curl "http://localhost:8086/import-package?package_name=GameOfLife-Tests&path=<this-folder>/src"
+   curl "http://localhost:8086/import-package?package_name=AgentTerminal&path=<this-folder>/src"
    ```
    (note: `path` is the *folder*, not the package; the name comes from
    `package_name`)
@@ -236,6 +237,7 @@ launcher does not). The key is read at each call, never saved.
 | `AgentSession ask:` fails with "MISTRAL_API_KEY is not set" | The image process lacks the key. Restart the image (server or desktop) from a shell that has it; agents can do this for you. |
 | Agent "does not see" the tools | MCP servers load when the agent session starts. Restart the session, or run its reload command. |
 | Tests unexpectedly fail after restoring a snapshot | The snapshot predates the code. Re-run the replay demo, or import from `src/`. |
+| The image process dies out of nowhere; `PharoDebug.log` ends with `THERE_BE_DRAGONS_HERE` and `PrimitiveFailed: primitive #primitiveSSLDestroy:` | A stale SSL session was saved into the image (typically after `AgentSession` talked to the API) and crashes it at garbage-collect time. Nothing durable is lost: restore a snapshot, or rebuild fresh and run `python demo/replay_demo.py`. |
 
 ## Glossary
 

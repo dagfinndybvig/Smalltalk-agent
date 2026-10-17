@@ -40,6 +40,12 @@ Items are roughly ordered; see README.md for the architecture.
       8086 listening?) — partially covered by replay_demo.py's check
 - [ ] Decide image lifecycle: auto-start on boot (Task Scheduler / nssm as a
       Windows service) vs on-demand by the agent
+- [ ] Defuse the stale-SSL-finalizer crash: an image saved after an
+      `AgentSession` HTTPS call can die at GC time with
+      `PrimitiveFailed: primitiveSSLDestroy:` (a `ZdcPluginSSLSession`
+      finalizing a handle that died with the previous process).
+      Investigate neutralizing stale SSL sessions on boot; if it is an
+      upstream Pharo/Zdc bug, report it there.
 
 ## Before going public (LinkedIn / GitHub)
 

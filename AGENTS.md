@@ -98,6 +98,14 @@ the image is the authority, not the docs.
    `42 factorial printString`.
 
 5. `crLog` does not exist in Pharo 13; use `traceCr` or `Transcript`.
+6. **A saved image can carry a stale SSL session that kills the VM at
+   GC time.** If the image was saved after `AgentSession` talked to the
+   API, a `ZdcPluginSSLSession` with an invalid handle can survive into
+   the next boot; when the garbage collector finalizes it, the VM exits
+   with `PrimitiveFailed: primitive #primitiveSSLDestroy:` (check
+   `PharoDebug.log` for `THERE_BE_DRAGONS_HERE`). Nothing durable is
+   lost: restore from `snapshots/` or rebuild fresh and re-run
+   `demo/replay_demo.py`.
 
 ## In-image agent (AgentSession)
 
@@ -123,6 +131,10 @@ variant: LLM tool calls executed as native Smalltalk messages.
   either fail or, with a redirect, create a literal file named `nul`.
 - Redirect to `/dev/null`, never `> nul`. If a stray `nul` file appears,
   delete it (`rm nul` works in Git Bash) — it is gitignored.
+- Re-running the zeroconf installer over an existing `pharo-vm/` prompts
+  for every file; with non-interactive stdin this leaves the VM
+  half-replaced. Agents must `rm -rf pharo-vm` first (regenerable,
+  gitignored), then re-run the installer.
 - Never run two VMs on the same image files. Before starting the server,
   check whether it is already up (health check above); another agent
   session may have started it.
