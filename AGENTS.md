@@ -82,6 +82,10 @@ the image is the authority, not the docs.
    objects (`ShiftClassBuilder`, class objects) and reports
    `"JSON mapping not found for: X"` even though the code ran. End evals with
    a symbol, string, or number: `... install. #created`.
+   Arbitrary-precision integers (factorials, big sums) exceed JSON's
+   safe-integer domain and are rejected by the MCP layer with
+   "exceeds safe integer domain for JSON floats" — return them as strings:
+   `42 factorial printString`.
 
 5. `crLog` does not exist in Pharo 13; use `traceCr` or `Transcript`.
 
