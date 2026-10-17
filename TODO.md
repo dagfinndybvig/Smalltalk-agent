@@ -18,8 +18,11 @@ Items are roughly ordered; see README.md for the architecture.
 
 ## Near term — harden the PoC
 
-- [ ] Verify the `smalltalk-interop` MCP tools appear in a fresh Vibe session
-      (`/mcp` status), and run a real coding task through them
+- [x] Verify the `smalltalk-interop` MCP tools appear in a fresh Vibe session
+      (`/mcp` status), and run a real coding task through them — done via
+      full cold-start acceptance test: a different agent session recovered
+      the lost image from src/, TDD'd `generations:` red -> green (6/6),
+      saved the image, committed and pushed
 - [ ] A `restart-server.cmd` / health-check helper (is the image up? port
       8086 listening?) — partially covered by replay_demo.py's check
 - [ ] Decide image lifecycle: auto-start on boot (Task Scheduler / nssm as a
@@ -34,7 +37,8 @@ Repo: https://github.com/dagfinndybvig/Smalltalk-agent
       "Pharo under agentic control — live-image TDD via MCP";
       topics: smalltalk, pharo, mcp, llm-agents, live-programming
 - [ ] Record a screen/asciinema capture of `demo/replay_demo.py` for the post
-- [ ] Tag a release (v0.1.0) once MCP tools are verified in a fresh session
+- [x] Tag a release (v0.1.0) — MCP tools verified in a fresh session; release
+      includes the cold-start acceptance test story
 
 ## Mid term — better agent ergonomics
 
