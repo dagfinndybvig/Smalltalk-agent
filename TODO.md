@@ -42,10 +42,10 @@ Items are roughly ordered; see README.md for the architecture.
 Repo: https://github.com/dagfinndybvig/Smalltalk-agent
 
 - [x] Choose a license — MIT (see LICENSE)
-- [ ] Set the GitHub repo description and topics, e.g.
-      "Pharo under agentic control — live-image TDD via MCP";
-      topics: smalltalk, pharo, mcp, llm-agents, live-programming
-- [ ] Record a screen/asciinema capture of `demo/replay_demo.py` for the post
+- [x] Set the GitHub repo description and topics
+- [x] Record a screen/asciinema capture for the post — README lead
+      screenshot (glider gun view) added by the author; live capture of
+      `demo/replay_demo.py` still worth doing for the post itself
 - [x] Tag a release (v0.1.0) — MCP tools verified in a fresh session; release
       includes the cold-start acceptance test story
 
