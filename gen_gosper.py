@@ -126,7 +126,7 @@ payloads = {
     "gosper-03-open.json":
         "GameOfLife gosperGun openGunView. #gunViewOpened",
 }
-out = Path("C:/Users/dybvig/Reverse/Smalltalk/demo")
+out = Path(__file__).resolve().parent / "demo"
 for name, code in payloads.items():
     (out / name).write_text(json.dumps({"code": code}), encoding="utf-8")
     print(f"wrote demo/{name}")

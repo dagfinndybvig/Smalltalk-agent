@@ -30,8 +30,8 @@ Checking image server... up
 
 == Export durable sources (Tonel) into src/
    GET /export-package?package_name=GameOfLife&path=src/
-   -> {"result": "GameOfLife exported to: /C:/Users/dybvig/Reverse/Smalltalk/src", "success": true}
+   -> {"result": "GameOfLife exported to: <repo>/src", "success": true}
    GET /export-package?package_name=GameOfLife-Tests&path=src/
-   -> {"result": "GameOfLife-Tests exported to: /C:/Users/dybvig/Reverse/Smalltalk/src", "success": true}
+   -> {"result": "GameOfLife-Tests exported to: <repo>/src", "success": true}
 
 Done. Live classes: GameOfLife, GameOfLifeTest. Sources in src/.
