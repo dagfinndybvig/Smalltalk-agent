@@ -21,6 +21,10 @@ Items are roughly ordered; see README.md for the architecture.
       agent self-verification via `/read-screen`
 - [x] Gosper glider gun: canonical RLE fetched and verified by
       simulation, test-first into the image, suite 7/7
+- [x] Inside-out agent: AgentSession lives in the image (Zinc +
+      NeoJSON tool-calling loop, native eval/run_tests/get_method_source,
+      key via OSEnvironment, never stored); validated TDD session red ->
+      green 8/8 by the in-image agent itself
 - [x] Cold-start acceptance test by a different agent session:
       recovered lost image from src/, live TDD red -> green (6/6),
       saved, committed, pushed
@@ -69,6 +73,11 @@ Repo: https://github.com/dagfinndybvig/Smalltalk-agent
 
 - [ ] Squeak interop: SIS v4 also supports Squeak — decide whether the
       PoC should target both dialects
+- [ ] AgentChatWindow: a proper Morphic/Spec terminal window for
+      AgentSession (transcript + input + object inspector), instead of
+      driving it from the Playground/eval
+- [ ] Streaming responses and richer tools for AgentSession (snapshot,
+      class browsing, debugger interaction via live exception objects)
 - [ ] Debugger control as agent tools: capture context chains on halt/error,
       inspect live objects in frames, proceed/restart programmatically
       (this is the biggest gap in the current SIS API)

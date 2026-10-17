@@ -207,6 +207,21 @@ python demo/replay_demo.py
 You will watch tests fail on purpose, then pass, then the code being
 exported to `src/` and the image saved.
 
+## An agent inside the image (advanced)
+
+The image also contains its own agent. `AgentSession` talks directly
+to the Mistral API and runs the model's tool calls as Smalltalk
+messages - it modifies the very image it lives in. Try, from a
+terminal (server running) or the Playground:
+
+```bash
+curl -X POST http://localhost:8086/eval/ -H "Content-Type: application/json" -d "{\"code\":\"AgentSession new ask: ''Run the GameOfLifeTest suite and report.''\"}"
+```
+
+Requirement: the image must have `MISTRAL_API_KEY` in its environment
+(a server started from an agent shell has it; a double-clicked
+launcher does not). The key is read at each call, never saved.
+
 ## Troubleshooting
 
 | Symptom | Cause and fix |

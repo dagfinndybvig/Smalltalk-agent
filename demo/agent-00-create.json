@@ -1,0 +1,1 @@
+{"code": "Object << #AgentSession slots: { #model. #messages. #iterations. #maxIterations }; package: 'AgentTerminal'; install. #created"}
