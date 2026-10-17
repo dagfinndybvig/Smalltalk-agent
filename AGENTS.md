@@ -110,6 +110,29 @@ the image is the authority, not the docs.
   check whether it is already up (health check above); another agent
   session may have started it.
 
+## Desktop (GUI) mode
+
+The user may run the Pharo desktop via `start-pharo-desktop.cmd`
+(Pharo.exe on the same image). In GUI mode:
+
+- SIS still serves :8086 — health checks and evals work as usual; do
+  NOT start a second VM (headless or GUI) while one is running.
+- Roassal works from eval processes: `RSCanvas new ... open` opens a
+  window on the user's screen. See `GameOfLife >> openEvolutionView`
+  and `openGunView` in `src/` for the working pattern (grid of boxes
+  in a Dictionary keyed by point, repaint + `canvas signalUpdate` in a
+  forked loop).
+- Verify your own UI work: `GET /read-screen` returns the World morph
+  structure (classes, bounds, visibility) plus a screenshot path.
+- `Color veryLighter` does not exist in Pharo 13; use named colors
+  (`Color veryLightGray`) or `lighter`.
+- The VM writes empty `stderr`/`stdout` files in the project root
+  while running — gitignored; deletable only after the VM exits.
+- When installing complex patterns (e.g. Life patterns from RLE),
+  fetch canonical data from an authoritative mirror and verify by
+  simulation BEFORE compiling into the image — see `gen_gosper.py`
+  for the working approach.
+
 ## Safety
 
 - The eval endpoint executes arbitrary code in a live system. Before risky

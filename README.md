@@ -33,8 +33,10 @@ suites — all against the running image.
 | `pharo`, `pharo-ui`, `pharo-vm/` | Pharo 13 launcher scripts and VM |
 | `keepalive.st` | Startup script that keeps the headless image alive |
 | `start-pharo-server.cmd` | Double-click launcher for the headless server |
+| `start-pharo-desktop.cmd` | Double-click launcher for the Pharo desktop (GUI) |
 | `snapshot.cmd` / `restore.cmd` | Whole-world undo: copy/restore the image files |
 | `demo/` | The agent's actual eval payloads + one-command replay script |
+| `gen_gosper.py` | RLE verifier + eval-payload generator for the Gosper gun |
 | `src/` | Durable source of truth: Tonel export of live packages |
 | `AGENTS.md` | Operating rules for AI agents working in this directory |
 | `TODO.md` | Roadmap / next steps |
@@ -54,6 +56,19 @@ Persistence caveat: the image on disk only changes when it is *saved*
 (`Smalltalk snapshot: true andQuit: false`). Code compiled into a running
 image is lost if the VM dies unsaved — which is why the demo exports
 Tonel sources to `src/` and saves the image at the end.
+
+## The Pharo desktop
+
+`start-pharo-desktop.cmd` opens the same image with the full Pharo GUI —
+browser, playground, inspector, the original live environment. SIS still
+serves on 8086, so an agent session and a human share the same live
+world: the agent can compile methods (they appear in the browser),
+evaluate code, open windows on your screen, and verify its own UI work
+via `/read-screen`.
+
+One hard rule: **never run two VMs on the same image files** — stop the
+headless server (close its console or `taskkill /IM PharoConsole.exe`)
+before opening the desktop, and vice versa.
 
 Verify it is up:
 
@@ -134,6 +149,20 @@ desktop was open: `(GameOfLife new withAll: { 1@1. 2@2. 0@3. 1@3. 2@3 })
 openEvolutionView` opens an animated Roassal grid — watch a glider crawl
 while SIS's screen-structure endpoint (`/read-screen`) lets the agent
 verify what it drew. Human and agent share the same live world.
+
+The showpiece is Bill Gosper's 1970 glider gun — the first known pattern
+with unbounded growth, firing a glider every 30 generations, forever:
+
+```smalltalk
+GameOfLife gosperGun openGunView
+```
+
+It was added the disciplined way: the canonical RLE was fetched from a
+GitHub mirror (LifeWiki is Cloudflare-walled), verified by local
+simulation *before* touching the image (36 cells, one extra glider per
+30-generation cycle), then driven test-first into the live system —
+red, implement, green (7/7). `gen_gosper.py` holds the verifier and
+payload generator; `demo/gosper-*.json` are the exact evals used.
 
 ## Whole-world undo
 

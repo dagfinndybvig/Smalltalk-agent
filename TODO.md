@@ -15,6 +15,15 @@ Items are roughly ordered; see README.md for the architecture.
       (red: 5 errors -> green: 5 passed), replayable via `demo/replay_demo.py`
 - [x] Whole-world undo: `snapshot.cmd` / `restore.cmd`
 - [x] Folder trusted in Vibe; AGENTS.md auto-loads for agent sessions
+- [x] Desktop mode (`start-pharo-desktop.cmd`): SIS serves :8086 in GUI
+      mode; human and agent share the live world
+- [x] Agent-driven UI: Roassal `openEvolutionView` / `openGunView`,
+      agent self-verification via `/read-screen`
+- [x] Gosper glider gun: canonical RLE fetched and verified by
+      simulation, test-first into the image, suite 7/7
+- [x] Cold-start acceptance test by a different agent session:
+      recovered lost image from src/, live TDD red -> green (6/6),
+      saved, committed, pushed
 
 ## Near term — harden the PoC
 
@@ -50,8 +59,9 @@ Repo: https://github.com/dagfinndybvig/Smalltalk-agent
       the error JSON; try a "define, then use" retry pattern automatically
 - [ ] Test-runner integration: `run_package_test` output shaping, red-green
       loop conventions for agent-driven TDD
-- [ ] Explore `read_screen` (UI debugging) — agent-driven UI development with
-      Spec/Morphic screenshots
+- [x] Explore `read_screen` (UI debugging) — works: morph structure JSON
+      + screenshot; used for agent self-verification of Roassal views
+      (Spec presenter screenshot capture still untested)
 - [ ] Evaluate mumez/pharo-agentic-browser as a full workspace UI / whether
       to stay with plain MCP tools
 
