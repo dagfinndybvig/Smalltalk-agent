@@ -77,6 +77,11 @@ GameOfLife >> generations: anInteger [
 ]
 
 { #category : 'as yet unclassified' }
+GameOfLife >> hasCellAt: aPoint [
+	^ self cells includes: aPoint
+]
+
+{ #category : 'as yet unclassified' }
 GameOfLife >> initialize [
 	super initialize.
 	liveCells := Set new
@@ -122,6 +127,10 @@ GameOfLife >> nextGeneration [
 			ifTrue: [ (count = 2 or: [ count = 3 ]) ifTrue: [ next add: point ] ]
 			ifFalse: [ count = 3 ifTrue: [ next add: point ] ] ].
 	^ self class new withAll: next
+]
+
+{ #category : 'as yet unclassified' }
+GameOfLife >> numberOfLiveCells [ ^ self cells size
 ]
 
 { #category : 'as yet unclassified' }
@@ -226,6 +235,36 @@ GameOfLife >> paintBoxes: boxes [
 		box color: ((liveCells includes: point)
 			ifTrue: [ Color black ]
 			ifFalse: [ Color white ]) ]
+]
+
+{ #category : 'as yet unclassified' }
+GameOfLife >> sierpinskiCarpetLevel2 [
+	"Return a collection of points representing the level-2 Sierpinski carpet pattern.
+	This is a 9x9 grid with the middle third removed."
+	
+	^ self sierpinskiCarpetLevel: 2 inBounds: (0@0 corner: 8@8)
+]
+
+{ #category : 'as yet unclassified' }
+GameOfLife >> sierpinskiCarpetLevel: level inBounds: bounds [
+	| points subSize |
+	level <= 0 ifTrue: [ ^ Array with: bounds origin ].
+	
+	points := OrderedCollection new.
+	subSize := bounds width + 1 // 3.
+	
+	0 to: 2 do: [ :i |
+		0 to: 2 do: [ :j |
+			(i = 1 and: [ j = 1 ]) ifFalse: [
+				| subBounds |
+				subBounds := (bounds origin x + (i * subSize)) @ (bounds origin y + (j * subSize))
+					corner: (bounds origin x + ((i + 1) * subSize) - 1) @ (bounds origin y + ((j + 1) * subSize) - 1).
+				points addAll: (self sierpinskiCarpetLevel: level - 1 inBounds: subBounds).
+			].
+		].
+	].
+	
+	^ points asArray
 ]
 
 { #category : 'as yet unclassified' }
