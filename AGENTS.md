@@ -41,6 +41,16 @@ curl -sS -X POST http://localhost:8086/eval/ -H "Content-Type: application/json"
   start, two-VM guard) — if you use it, run it detached/background too,
   because it polls until the server is up.
 - Never launch the GUI (`pharo-ui`) from an agent session.
+- **Before telling the user to relaunch the desktop, STOP the headless
+  server.** A desktop started while a headless VM still holds the image is
+  the forbidden two-VM state, and it splits the bridge silently: the
+  headless VM keeps port 8086 (SIS binds at boot; the desktop's SIS just
+  fails to bind), so every eval lands in a world nobody is looking at.
+  Symptoms: evals succeed but the user sees no change, read-screen shows a
+  degenerate world (e.g. 240x120 with windows overflowing it). Recovery:
+  kill `PharoConsole.exe`, have the user relaunch the desktop, then
+  verify the bridge reaches the real world (`/read-screen` bounds should
+  match the actual screen before trusting any GUI-visible change).
 
 ## Talking to the image
 
