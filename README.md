@@ -41,6 +41,7 @@ suites — all against the running image.
 | `gen_gosper.py` | RLE verifier + eval-payload generator for the Gosper gun |
 | `src/` | Durable source of truth: Tonel export of live packages |
 | `AGENTS.md` | Operating rules for AI agents working in this directory |
+| `MANUAL.md` | Plain user's guide: setup, desktop tour, troubleshooting |
 | `TODO.md` | Roadmap / next steps |
 
 ## Starting the server
