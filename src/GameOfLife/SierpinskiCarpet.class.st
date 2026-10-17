@@ -90,7 +90,7 @@ SierpinskiCarpet >> openCarpetView [
 	| side usable pitch form window |
 	side := (cells collect: #x) max + 1.
 	usable := (World extent x - 12) @ (World extent y - 72).
-	pitch := ((usable x min: usable y) // side) max: 2.
+	pitch := ((usable x min: usable y) // side) max: 1.
 	form := Form extent: side * pitch @ (side * pitch) depth: 32.
 	form fillColor: Color white.
 	cells do: [ :p |
@@ -102,7 +102,7 @@ SierpinskiCarpet >> openCarpetView [
 	window addMorph: (ImageMorph new form: form) frame: (0 @ 0 corner: 1 @ 1).
 	window extent: (side * pitch) @ (side * pitch) + (12 @ 48).
 	window openInWorld.
-	window position: 0 @ 18.
+	window position: ((World extent x - window extent x) // 2) @ 18.
 	^ window
 ]
 
