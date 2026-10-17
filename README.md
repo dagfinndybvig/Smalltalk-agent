@@ -50,6 +50,11 @@ Double-click `start-pharo-server.cmd`, or from Git Bash:
 SIS auto-starts on image boot and listens on **port 8086**
 (`PHARO_SIS_PORT` to change). Stop with Ctrl+C.
 
+Persistence caveat: the image on disk only changes when it is *saved*
+(`Smalltalk snapshot: true andQuit: false`). Code compiled into a running
+image is lost if the VM dies unsaved — which is why the demo exports
+Tonel sources to `src/` and saves the image at the end.
+
 Verify it is up:
 
 ```

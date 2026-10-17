@@ -7,6 +7,16 @@ before doing anything here.
 
 - `Pharo.image` + `Pharo.changes` are **live state**, not artifacts. They hold
   running processes, the loaded SIS server, and any classes created at runtime.
+- **The image on disk is only updated on save.** Classes compiled into a
+  running image exist in memory; if the VM dies without saving, they are gone
+  (the `.changes` file keeps source text, but nothing reloads it
+  automatically). After meaningful live changes, do both:
+  1. Export affected packages as Tonel to `src/` (durable, git-committable), and
+  2. Save the image: eval `Smalltalk snapshot: true andQuit: false`
+     (`Smalltalk saveImage` does NOT exist in Pharo 13).
+- If classes are missing after a fresh boot (unsaved work was lost), restore
+  from the Tonel sources: `GET /import-package?package_name=X&path=src`
+  — or re-run `demo/replay_demo.py`, which rebuilds and saves.
 - The image normally runs headless as a long-lived process, with
   `PharoSmalltalkInteropServer` (SIS) on **http://localhost:8086**.
 - Source of truth for anything durable should be Tonel export (via SIS) or a
@@ -111,7 +121,8 @@ the image is the authority, not the docs.
 - Prefer small, idempotent evals over large scripts.
 - After meaningful live changes, keep the durable source of truth in sync:
   export the affected package as Tonel to `src/` via
-  `GET /export-package?package_name=X&path=<abs src path>`, and commit.
+  `GET /export-package?package_name=X&path=<abs src path>`, save the image
+  (`Smalltalk snapshot: true andQuit: false`), and commit.
 - `demo/replay_demo.py` is the reference for how a structured agent session
   against the image should look (health check -> evals -> test runs -> export).
 

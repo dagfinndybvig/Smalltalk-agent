@@ -91,6 +91,11 @@ def main():
             print(f"   GET /export-package?package_name={package}&path=src/")
             print(f"   -> {json.dumps(r, ensure_ascii=False)}")
 
+        print("\n== Save the image (work survives VM restarts)")
+        print(f"   POST /eval/  <- demo/06-save-image.json")
+        r = post_eval(args.port, "06-save-image.json")
+        print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+
     print("\nDone. Live classes: GameOfLife, GameOfLifeTest. Sources in src/.")
 
 
