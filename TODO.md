@@ -68,12 +68,14 @@ Repo: https://github.com/dagfinndybvig/Smalltalk-agent
 
 ## Mid term — better agent ergonomics
 
-- [ ] Fix AgentSession's `get_method_source` tool: it only sees instance-side
+- [x] Fix AgentSession's `get_method_source` tool: it only saw instance-side
       methods. A live fix session concluded the class-side `GameOfLife
-      class >> diamond` "does not exist" (its tool cannot look at the class
+      class >> diamond` "does not exist" (its tool could not look at the class
       side), compiled a duplicate on the instance side, and burned all 25
-      iterations chasing the contradiction. Add a class-side fallback in
-      `gen_agent.py` / `demo/agent-04-tools.json`, then rebuild and revalidate.
+      iterations chasing the contradiction. Fixed: instance-side lookup first,
+      class-side fallback (result tagged "(class side)"), tool description
+      updated; verified red -> green on `gosperGun` and rebuilt into the
+      image via the regenerated `demo/agent-02/04` payloads.
 
 - [ ] Write a Vibe skill encoding the Pharo 13 rules (the AGENTS.md section)
       so any agent session in this folder gets them automatically

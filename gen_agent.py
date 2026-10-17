@@ -44,7 +44,7 @@ add_string = """addString: role content: aString
 	messages add: (Dictionary new at: 'role' put: role; at: 'content' put: aString; yourself)"""
 
 tools_spec = """toolsSpec
-	^ NeoJSONReader fromString: '[{"type":"function","function":{"name":"eval","description":"Evaluate Smalltalk code in the live image. Returns the result printString. Errors come back with description and stack.","parameters":{"type":"object","properties":{"code":{"type":"string","description":"Smalltalk code to evaluate"}},"required":["code"]}}},{"type":"function","function":{"name":"run_tests","description":"Run the SUnit test suite of a TestCase subclass in the live image.","parameters":{"type":"object","properties":{"class_name":{"type":"string"}},"required":["class_name"]}}},{"type":"function","function":{"name":"get_method_source","description":"Return the source code of an instance method of a class in the live image.","parameters":{"type":"object","properties":{"class_name":{"type":"string"},"method_name":{"type":"string"}},"required":["class_name","method_name"]}}}]'"""
+	^ NeoJSONReader fromString: '[{"type":"function","function":{"name":"eval","description":"Evaluate Smalltalk code in the live image. Returns the result printString. Errors come back with description and stack.","parameters":{"type":"object","properties":{"code":{"type":"string","description":"Smalltalk code to evaluate"}},"required":["code"]}}},{"type":"function","function":{"name":"run_tests","description":"Run the SUnit test suite of a TestCase subclass in the live image.","parameters":{"type":"object","properties":{"class_name":{"type":"string"}},"required":["class_name"]}}},{"type":"function","function":{"name":"get_method_source","description":"Return the source code of a method of a class in the live image - instance side first, then class side.","parameters":{"type":"object","properties":{"class_name":{"type":"string"},"method_name":{"type":"string"}},"required":["class_name","method_name"]}}}]'"""
 
 api_key = """apiKey
 	^ OSEnvironment current at: 'MISTRAL_API_KEY' ifAbsent: [ self error: 'MISTRAL_API_KEY is not set in the environment' ]"""
@@ -125,9 +125,11 @@ run_tests_tool = """runTestsTool: className
 method_source_tool = """methodSourceTool: className method: methodName
 	| cls |
 	cls := Smalltalk globals at: className asSymbol ifAbsent: [ ^ 'No such class: ', className ].
-	^ [ cls sourceCodeAt: methodName asSymbol ]
-		on: Error
-		do: [ 'No such method: ', className, '>>', methodName ]"""
+	(cls includesSelector: methodName asSymbol)
+		ifTrue: [ ^ cls sourceCodeAt: methodName asSymbol ].
+	(cls class includesSelector: methodName asSymbol)
+		ifTrue: [ ^ (cls class sourceCodeAt: methodName asSymbol) printString, ' (class side)' ].
+	^ 'No such method: ', className, '>>', methodName"""
 
 class_ask = """ask: aString
 	^ self new ask: aString"""
