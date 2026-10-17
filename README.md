@@ -129,6 +129,12 @@ agent compiles the evolution rules into the live classes, re-runs, and the
 suite goes green. Full transcript: `demo/replay-output.txt`. Durable
 sources land in `src/` as plain Tonel files, reviewable in git.
 
+The package also has a graphical view, added live by an agent while the
+desktop was open: `(GameOfLife new withAll: { 1@1. 2@2. 0@3. 1@3. 2@3 })
+openEvolutionView` opens an animated Roassal grid — watch a glider crawl
+while SIS's screen-structure endpoint (`/read-screen`) lets the agent
+verify what it drew. Human and agent share the same live world.
+
 ## Whole-world undo
 
 The live image is single mutable state. Before risky work, snapshot it:

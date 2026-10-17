@@ -20,3 +20,6 @@ snapshots/
 # Windows reserved device names accidentally materialized as files
 # (e.g. `foo > nul` under Git Bash creates a literal file named nul)
 nul
+# VM console redirection artifacts (held open while the VM runs)
+stderr
+stdout

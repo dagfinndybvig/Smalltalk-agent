@@ -9,6 +9,15 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
+GameOfLife >> drawOn: canvas [
+	liveCells do: [ :p |
+		canvas add: (RSBox new
+			size: 18;
+			color: Color black;
+			position: (p x * 22) @ (p y negated * 22)) ]
+]
+
+{ #category : 'as yet unclassified' }
 GameOfLife >> generations: anInteger [
 	| current |
 	current := self.
@@ -62,6 +71,51 @@ GameOfLife >> nextGeneration [
 			ifTrue: [ (count = 2 or: [ count = 3 ]) ifTrue: [ next add: point ] ]
 			ifFalse: [ count = 3 ifTrue: [ next add: point ] ] ].
 	^ self class new withAll: next
+]
+
+{ #category : 'as yet unclassified' }
+GameOfLife >> openEvolutionView [
+	| canvas boxes origin extent |
+	extent := 30.
+	origin := extent // 2.
+	canvas := RSCanvas new.
+	canvas color: Color veryLightGray.
+	boxes := Dictionary new.
+	origin negated to: (extent - origin) do: [ :gx |
+		origin negated to: (extent - origin) do: [ :gy |
+			| box |
+			box := RSBox new
+				size: 18;
+				color: Color white.
+			box position: (gx * 22) @ (gy negated * 22).
+			canvas add: box.
+			boxes at: gx @ gy put: box ] ].
+	self paintBoxes: boxes.
+	canvas open.
+	[ | life |
+		life := self.
+		300 timesRepeat: [
+			(Delay forMilliseconds: 250) wait.
+			life := life nextGeneration.
+			life paintBoxes: boxes.
+			canvas signalUpdate ] ] fork
+]
+
+{ #category : 'as yet unclassified' }
+GameOfLife >> openView [
+	| canvas |
+	canvas := RSCanvas new.
+	canvas color: Color white.
+	self drawOn: canvas.
+	^ canvas open
+]
+
+{ #category : 'as yet unclassified' }
+GameOfLife >> paintBoxes: boxes [
+	boxes keysAndValuesDo: [ :point :box |
+		box color: ((liveCells includes: point)
+			ifTrue: [ Color black ]
+			ifFalse: [ Color white ]) ]
 ]
 
 { #category : 'as yet unclassified' }
