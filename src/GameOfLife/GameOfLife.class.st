@@ -8,6 +8,15 @@ Class {
 	#package : 'GameOfLife'
 }
 
+{ #category : 'patterns' }
+GameOfLife class >> diamond [
+	"The tub: the smallest diamond-shaped still life.
+	  0@1
+	1@0 1@2
+	  2@1"
+	^ self new withAll: { 0 @ 1. 1 @ 0. 1 @ 2. 2 @ 1 }
+]
+
 { #category : 'as yet unclassified' }
 GameOfLife class >> gosperGun [
 	"Bill Gosper, 1970: the first known glider gun. True period 30:

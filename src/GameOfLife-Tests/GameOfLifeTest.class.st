@@ -27,6 +27,19 @@ GameOfLifeTest >> testCellWithThreeNeighboursIsBorn [
 ]
 
 { #category : 'as yet unclassified' }
+GameOfLifeTest >> testDiamond [
+	| pattern nextGen |
+	pattern := GameOfLife diamond.
+	
+	"Check that the pattern has 4 cells"
+	self assert: pattern liveCells size equals: 4.
+	
+	"Check that the pattern is a still life"
+	nextGen := pattern generations: 3.
+	self assert: nextGen liveCells equals: pattern liveCells
+]
+
+{ #category : 'as yet unclassified' }
 GameOfLifeTest >> testGenerationsReturnsStateAfterNGenerations [
 	| life |
 	life := GameOfLife new withAll: { 0 @ 1. 1 @ 1. 2 @ 1 }.
