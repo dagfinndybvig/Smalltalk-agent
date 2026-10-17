@@ -18,7 +18,7 @@ Checking image server... up
 
 == Run tests BEFORE implementation (expect RED)
    GET /run-class-test?class_name=GameOfLifeTest
-   -> {"result": "5 ran, 0 passed, 0 skipped, 0 expected failures, 0 failures, 5 errors, 0 passed unexpected\rFailures:\r\rErrors:\rGameOfLifeTest>>#testLonelyCellDies\rGameOfLifeTest>>#testBlockIsStillLife\rGameOfLifeTest>>#testBlinkerOscillates\rGameOfLifeTest>>#testOvercrowdedCellDies\rGameOfLifeTest>>#testCellWithThreeNeighboursIsBorn\r", "success": true}
+   -> {"result": "5 ran, 0 passed, 0 skipped, 0 expected failures, 0 failures, 5 errors, 0 passed unexpected\rFailures:\r\rErrors:\rGameOfLifeTest>>#testBlockIsStillLife\rGameOfLifeTest>>#testOvercrowdedCellDies\rGameOfLifeTest>>#testCellWithThreeNeighboursIsBorn\rGameOfLifeTest>>#testBlinkerOscillates\rGameOfLifeTest>>#testLonelyCellDies\r", "success": true}
 
 == Compile the evolution rules: neighbours + nextGeneration
    POST /eval/  <- demo/05-compile-evolution.json
@@ -50,6 +50,21 @@ Checking image server... up
 == Run all tests with the gun (expect GREEN, 7 ran)
    GET /run-class-test?class_name=GameOfLifeTest
    -> {"result": "7 ran, 7 passed, 0 skipped, 0 expected failures, 0 failures, 0 errors, 0 passed unexpected\rFailures:\r\rErrors:\r", "success": true}
+
+== Add the puffer train, test-first
+   POST /eval/  <- demo/puffer-01-test.json
+   -> {"result": "pufferTestCompiled", "success": true}
+
+== Run puffer test BEFORE implementation (expect RED)
+   GET /run-class-test?class_name=GameOfLifeTest
+   -> {"result": "8 ran, 7 passed, 0 skipped, 0 expected failures, 0 failures, 1 error, 0 passed unexpected\rFailures:\r\rErrors:\rGameOfLifeTest>>#testPufferTrainTravelsAndLeavesDebris\r", "success": true}
+
+   POST /eval/  <- demo/puffer-02-impl.json
+   -> {"result": "pufferImplemented", "success": true}
+
+== Run all tests with the puffer (expect GREEN, 8 ran)
+   GET /run-class-test?class_name=GameOfLifeTest
+   -> {"result": "8 ran, 8 passed, 0 skipped, 0 expected failures, 0 failures, 0 errors, 0 passed unexpected\rFailures:\r\rErrors:\r", "success": true}
 
 == Build the inside-out agent (AgentSession) - inert without MISTRAL_API_KEY
    POST /eval/  <- demo/agent-00-create.json
