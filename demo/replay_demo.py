@@ -24,6 +24,8 @@ EVALS = [
     ("03-create-test-class.json", "Create GameOfLifeTest (TestCase subclass)"),
     ("04-compile-tests.json", "Compile 5 tests describing the rules of the game"),
     ("05-compile-evolution.json", "Compile the evolution rules: neighbours + nextGeneration"),
+    ("05b-generations.json", "Compile generations: and its test (blinker period 2)"),
+    ("05c-visualization.json", "Compile the Roassal views: drawOn:/openView/openEvolutionView/paintBoxes:"),
 ]
 # 04 is a deliberate RED step (nextGeneration does not exist yet);
 # 05 makes it GREEN. Tests run between them and after.

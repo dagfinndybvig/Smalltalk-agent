@@ -24,6 +24,10 @@ same live world.
   AI-agent part and the replay demo)
 - Internet access
 
+Linux and macOS users: everything here works too - use the bash
+commands in the README's "Rebuilding the environment" section in place of the
+`.cmd` files, which are Windows shortcuts.
+
 ## First-time setup
 
 Only needed once. From Git Bash, in this folder:
@@ -211,6 +215,8 @@ exported to `src/` and the image saved.
 | `KeyNotFound: #GameOfLife` | The image was never saved with the demo code. Run `python demo/replay_demo.py`, or import from `src/` (see above). |
 | Windows/other things break after starting the desktop | You started it while the server was still running. Stop one before starting the other. |
 | `exceeds safe integer domain for JSON floats` | You asked an agent to evaluate something like `42 factorial` and return the number. JSON can't carry it. Return it as a string: `42 factorial printString`. |
+| During `metacello install` you see "authentication error while cloning" and SSH warnings | Harmless: Pharo tries SSH first, then falls back to HTTPS on its own. Wait for "finished baseline". |
+| Re-running the Pharo download over an existing folder asks to "replace" DLLs | Answer `A` (all); it is refreshing the VM. |
 | A file named `nul`, `stderr` or `stdout` appeared | Windows/VM artifacts. `nul` can be deleted anytime; `stderr`/`stdout` only after the image quits. All are gitignored. |
 | Agent "does not see" the tools | MCP servers load when the agent session starts. Restart the session, or run its reload command. |
 | Tests unexpectedly fail after restoring a snapshot | The snapshot predates the code. Re-run the replay demo, or import from `src/`. |

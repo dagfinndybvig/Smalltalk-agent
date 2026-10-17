@@ -18,15 +18,38 @@ Checking image server... up
 
 == Run tests BEFORE implementation (expect RED)
    GET /run-class-test?class_name=GameOfLifeTest
-   -> {"result": "5 ran, 0 passed, 0 skipped, 0 expected failures, 0 failures, 5 errors, 0 passed unexpected\rFailures:\r\rErrors:\rGameOfLifeTest>>#testLonelyCellDies\rGameOfLifeTest>>#testCellWithThreeNeighboursIsBorn\rGameOfLifeTest>>#testBlockIsStillLife\rGameOfLifeTest>>#testOvercrowdedCellDies\rGameOfLifeTest>>#testBlinkerOscillates\r", "success": true}
+   -> {"result": "5 ran, 0 passed, 0 skipped, 0 expected failures, 0 failures, 5 errors, 0 passed unexpected\rFailures:\r\rErrors:\rGameOfLifeTest>>#testBlinkerOscillates\rGameOfLifeTest>>#testLonelyCellDies\rGameOfLifeTest>>#testOvercrowdedCellDies\rGameOfLifeTest>>#testCellWithThreeNeighboursIsBorn\rGameOfLifeTest>>#testBlockIsStillLife\r", "success": true}
 
 == Compile the evolution rules: neighbours + nextGeneration
    POST /eval/  <- demo/05-compile-evolution.json
    -> {"result": "evolutionCompiled", "success": true}
 
+== Compile generations: and its test (blinker period 2)
+   POST /eval/  <- demo/05b-generations.json
+   -> {"result": "generationsCompiled", "success": true}
+
+== Compile the Roassal views: drawOn:/openView/openEvolutionView/paintBoxes:
+   POST /eval/  <- demo/05c-visualization.json
+   -> {"result": "viewsCompiled", "success": true}
+
 == Run tests AFTER implementation (expect GREEN)
    GET /run-class-test?class_name=GameOfLifeTest
-   -> {"result": "5 ran, 5 passed, 0 skipped, 0 expected failures, 0 failures, 0 errors, 0 passed unexpected\rFailures:\r\rErrors:\r", "success": true}
+   -> {"result": "6 ran, 6 passed, 0 skipped, 0 expected failures, 0 failures, 0 errors, 0 passed unexpected\rFailures:\r\rErrors:\r", "success": true}
+
+== Add the Gosper glider gun, test-first
+   POST /eval/  <- demo/gosper-01-test.json
+   -> {"result": "gunTestCompiled", "success": true}
+
+== Run gun test BEFORE implementation (expect RED)
+   GET /run-class-test?class_name=GameOfLifeTest
+   -> {"result": "7 ran, 6 passed, 0 skipped, 0 expected failures, 0 failures, 1 error, 0 passed unexpected\rFailures:\r\rErrors:\rGameOfLifeTest>>#testGosperGunFiresGliders\r", "success": true}
+
+   POST /eval/  <- demo/gosper-02-impl.json
+   -> {"result": "gunImplemented", "success": true}
+
+== Run all tests with the gun (expect GREEN, 7 ran)
+   GET /run-class-test?class_name=GameOfLifeTest
+   -> {"result": "7 ran, 7 passed, 0 skipped, 0 expected failures, 0 failures, 0 errors, 0 passed unexpected\rFailures:\r\rErrors:\r", "success": true}
 
 == Export durable sources (Tonel) into src/
    GET /export-package?package_name=GameOfLife&path=src/
@@ -34,4 +57,8 @@ Checking image server... up
    GET /export-package?package_name=GameOfLife-Tests&path=src/
    -> {"result": "GameOfLife-Tests exported to: <repo>/src", "success": true}
 
-Done. Live classes: GameOfLife, GameOfLifeTest. Sources in src/.
+== Save the image (work survives VM restarts)
+   POST /eval/  <- demo/06-save-image.json
+   -> {"result": "imageSaved", "success": true}
+
+Done. Live classes: GameOfLife, GameOfLifeTest (+ Gosper glider gun). Sources in src/.
