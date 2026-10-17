@@ -37,12 +37,14 @@ curl -sS -L https://get.pharo.org/64/stable+vm | sh
   github://mumez/PharoSmalltalkInteropServer:main/src \
   BaselineOfPharoSmalltalkInteropServer
 
-# 3. (Optional) Load the demo code into the image
+# 3. (Optional) Start the image and load the demo code:
+#    - double-click start-pharo-server.cmd and wait ~10 seconds, or run
+#      ./pharo --headless Pharo.image st keepalive.st in a second terminal
 python demo/replay_demo.py
 ```
 
 After step 2, the server will start automatically every time the image
-starts. After step 3, the image also contains the GameOfLife example
+starts. After step 3, the image also contains the GameOfLife example and the Gosper glider gun
 (see "A tour of the demo" below).
 
 If someone already built the image and you just cloned this repository:

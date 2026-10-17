@@ -164,7 +164,7 @@ It was added the disciplined way: the canonical RLE was fetched from a
 GitHub mirror (LifeWiki is Cloudflare-walled), verified by local
 simulation *before* touching the image (36 cells, one extra glider per
 30-generation cycle), then driven test-first into the live system —
-red, implement, green (7/7). `gen_gosper.py` holds the verifier and
+red, implement, green (7/7). The replay demo builds it too, so a fresh install gets the complete package. `gen_gosper.py` holds the verifier and
 payload generator; `demo/gosper-*.json` are the exact evals used.
 
 ## Whole-world undo

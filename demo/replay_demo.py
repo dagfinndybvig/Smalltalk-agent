@@ -83,6 +83,22 @@ def main():
     print(f"   GET /run-class-test?class_name=GameOfLifeTest")
     print(f"   -> {json.dumps(green, ensure_ascii=False)}")
 
+    print("\n== Add the Gosper glider gun, test-first")
+    print(f"   POST /eval/  <- demo/gosper-01-test.json")
+    r = post_eval(args.port, "gosper-01-test.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+    print("\n== Run gun test BEFORE implementation (expect RED)")
+    red2 = run_class_test(args.port, "GameOfLifeTest")
+    print(f"   GET /run-class-test?class_name=GameOfLifeTest")
+    print(f"   -> {json.dumps(red2, ensure_ascii=False)}")
+    print(f"\n   POST /eval/  <- demo/gosper-02-impl.json")
+    r = post_eval(args.port, "gosper-02-impl.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+    print("\n== Run all tests with the gun (expect GREEN, 7 ran)")
+    green2 = run_class_test(args.port, "GameOfLifeTest")
+    print(f"   GET /run-class-test?class_name=GameOfLifeTest")
+    print(f"   -> {json.dumps(green2, ensure_ascii=False)}")
+
     if not args.no_export:
         print("\n== Export durable sources (Tonel) into src/")
         for package in ("GameOfLife", "GameOfLife-Tests"):
@@ -96,7 +112,7 @@ def main():
         r = post_eval(args.port, "06-save-image.json")
         print(f"   -> {json.dumps(r, ensure_ascii=False)}")
 
-    print("\nDone. Live classes: GameOfLife, GameOfLifeTest. Sources in src/.")
+    print("\nDone. Live classes: GameOfLife, GameOfLifeTest (+ Gosper glider gun). Sources in src/.")
 
 
 if __name__ == "__main__":
