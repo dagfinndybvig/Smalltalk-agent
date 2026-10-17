@@ -233,6 +233,7 @@ launcher does not). The key is read at each call, never saved.
 | During `metacello install` you see "authentication error while cloning" and SSH warnings | Harmless: Pharo tries SSH first, then falls back to HTTPS on its own. Wait for "finished baseline". |
 | Re-running the Pharo download over an existing folder asks to "replace" DLLs | Answer `A` (all); it is refreshing the VM. |
 | A file named `nul`, `stderr` or `stdout` appeared | Windows/VM artifacts. `nul` can be deleted anytime; `stderr`/`stdout` only after the image quits. All are gitignored. |
+| `AgentSession ask:` fails with "MISTRAL_API_KEY is not set" | The image process lacks the key. Restart the image (server or desktop) from a shell that has it; agents can do this for you. |
 | Agent "does not see" the tools | MCP servers load when the agent session starts. Restart the session, or run its reload command. |
 | Tests unexpectedly fail after restoring a snapshot | The snapshot predates the code. Re-run the replay demo, or import from `src/`. |
 
@@ -250,6 +251,7 @@ launcher does not). The key is read at each call, never saved.
   running inside the image, port 8086, that makes all of this
   scriptable.
 - **MCP** — Model Context Protocol; how AI agents call tools.
+- **AgentSession** — the in-image agent (see the advanced section): a Smalltalk object that talks to the Mistral API and executes tool calls as native messages.
 - **Tonel** — the plain-text format used for code in `src/`, so live
   code can be stored in git like any other source.
 - **VM** — the program (in `pharo-vm/`) that runs the image.

@@ -22,6 +22,14 @@ SIS — PharoSmalltalkInteropServer (in-image, Teapot + NeoJSON)
 Live Pharo 13 image (headless)
 ```
 
+And the other direction, entirely inside the image:
+
+```
+AgentSession (a Smalltalk object in the image) --Zinc--> Mistral API
+   ^-- tool calls executed as native messages --v
+Live Pharo object memory
+```
+
 The agent's unit of change is the *method*, not the file: it evaluates
 Smalltalk code, reads and writes class/method sources, searches
 implementors/references, imports/exports Tonel packages, and runs test
@@ -39,6 +47,7 @@ suites — all against the running image.
 | `snapshot.cmd` / `restore.cmd` | Whole-world undo: copy/restore the image files |
 | `demo/` | The agent's actual eval payloads + one-command replay script |
 | `gen_gosper.py` | RLE verifier + eval-payload generator for the Gosper gun |
+| `gen_agent.py` | Generator for the AgentSession build payloads (`demo/agent-*.json`) |
 | `src/` | Durable source of truth: Tonel export of live packages |
 | `AGENTS.md` | Operating rules for AI agents working in this directory |
 | `MANUAL.md` | Plain user's guide: setup, desktop tour, troubleshooting |
