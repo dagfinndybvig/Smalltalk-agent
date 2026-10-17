@@ -1,3 +1,5 @@
+<img width="980" height="917" alt="conway2" src="https://github.com/user-attachments/assets/ffd42ab1-01c5-421e-9a6a-df83602f1cee" />
+
 # Reverse Smalltalk — Agentic Control PoC
 
 A proof of concept for putting Smalltalk under agentic control: a live Pharo 13
