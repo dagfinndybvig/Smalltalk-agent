@@ -36,16 +36,23 @@ Items are roughly ordered; see README.md for the architecture.
       full cold-start acceptance test: a different agent session recovered
       the lost image from src/, TDD'd `generations:` red -> green (6/6),
       saved the image, committed and pushed
-- [ ] A `restart-server.cmd` / health-check helper (is the image up? port
-      8086 listening?) — partially covered by replay_demo.py's check
-- [ ] Decide image lifecycle: auto-start on boot (Task Scheduler / nssm as a
-      Windows service) vs on-demand by the agent
-- [ ] Defuse the stale-SSL-finalizer crash: an image saved after an
-      `AgentSession` HTTPS call can die at GC time with
-      `PrimitiveFailed: primitiveSSLDestroy:` (a `ZdcPluginSSLSession`
-      finalizing a handle that died with the previous process).
-      Investigate neutralizing stale SSL sessions on boot; if it is an
-      upstream Pharo/Zdc bug, report it there.
+- [x] A `restart-server.cmd` / health-check helper — created. Checks :8086,
+      refuses to start a second VM if a Pharo process already holds the
+      image, otherwise starts the headless image detached and waits for
+      SIS. Validated from the up state, the down state, and as the boot
+      step of the fresh-install validation.
+- [x] Image lifecycle decided: **on-demand**, not auto-started. The image
+      is single-writer, so an unattended auto-started VM (Task Scheduler /
+      nssm) can collide with the desktop GUI or an agent-started VM and
+      corrupt state. Both humans and agents have one-command starters
+      (`restart-server.cmd`, the AGENTS.md health check); revisit only if
+      headless use becomes continuous.
+- [x] Defuse the stale-SSL-finalizer crash: `ZdcPluginSSLSession>>finalize`
+      now tolerates a stale handle (catches the error, nils the handle,
+      deregisters) instead of killing the VM inside the finalization
+      process. Applied as a replay step (`demo/hardening-01-ssl.json`),
+      verified with a forced-GC stale-handle stress test, included in the
+      fresh-install validation. Still worth reporting upstream to Pharo/Zdc.
 
 ## Before going public (LinkedIn / GitHub)
 

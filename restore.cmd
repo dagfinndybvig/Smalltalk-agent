@@ -14,7 +14,7 @@ if not exist "%~1.image" (
   echo Not found: %~1.image
   exit /b 1
 )
-tasklist /FI "IMAGENAME eq PharoConsole.exe" 2>nul | find /I "PharoConsole.exe" >nul && (
+tasklist /FI "IMAGENAME eq PharoConsole.exe" 2>nul | findstr /I "PharoConsole.exe" >nul && (
   echo PharoConsole.exe is still running. Stop it before restoring.
   exit /b 1
 )

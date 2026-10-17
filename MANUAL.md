@@ -60,6 +60,7 @@ run step 1, then step 3 (the demo rebuilds and loads everything else).
 |---|---|
 | `start-pharo-server.cmd` | A windowless server. For agents and terminals. |
 | `start-pharo-desktop.cmd` | The full Smalltalk desktop, with windows and menus. |
+| `restart-server.cmd` | Health check: reports whether the server is up, starts it if not, and never starts a second copy. |
 
 Double-click either one. The server (or desktop) takes about ten
 seconds to come up. It is ready when this answers:
@@ -227,7 +228,7 @@ launcher does not). The key is read at each call, never saved.
 
 | Symptom | Cause and fix |
 |---|---|
-| `Connection refused` on port 8086 | The image isn't running. Start `start-pharo-server.cmd` (or the desktop — the server runs in both). |
+| `Connection refused` on port 8086 | The image isn't running. Run `restart-server.cmd` (starts it and waits until it answers), or start `start-pharo-server.cmd` (or the desktop — the server runs in both). |
 | `KeyNotFound: #GameOfLife` | The image was never saved with the demo code. Run `python demo/replay_demo.py`, or import from `src/` (see above). |
 | Windows/other things break after starting the desktop | You started it while the server was still running. Stop one before starting the other. |
 | `exceeds safe integer domain for JSON floats` | You asked an agent to evaluate something like `42 factorial` and return the number. JSON can't carry it. Return it as a string: `42 factorial printString`. |
@@ -237,7 +238,7 @@ launcher does not). The key is read at each call, never saved.
 | `AgentSession ask:` fails with "MISTRAL_API_KEY is not set" | The image process lacks the key. Restart the image (server or desktop) from a shell that has it; agents can do this for you. |
 | Agent "does not see" the tools | MCP servers load when the agent session starts. Restart the session, or run its reload command. |
 | Tests unexpectedly fail after restoring a snapshot | The snapshot predates the code. Re-run the replay demo, or import from `src/`. |
-| The image process dies out of nowhere; `PharoDebug.log` ends with `THERE_BE_DRAGONS_HERE` and `PrimitiveFailed: primitive #primitiveSSLDestroy:` | A stale SSL session was saved into the image (typically after `AgentSession` talked to the API) and crashes it at garbage-collect time. Nothing durable is lost: restore a snapshot, or rebuild fresh and run `python demo/replay_demo.py`. |
+| The image process dies out of nowhere; `PharoDebug.log` ends with `THERE_BE_DRAGONS_HERE` and `PrimitiveFailed: primitive #primitiveSSLDestroy:` | A stale SSL session was saved into the image (typically after `AgentSession` talked to the API) and crashes it at garbage-collect time. Fixed in current images: the replay installs a guard (`demo/hardening-01-ssl.json`). An old snapshot can still die this way — restore it, immediately re-run `python demo/replay_demo.py`, or rebuild fresh. |
 
 ## Glossary
 

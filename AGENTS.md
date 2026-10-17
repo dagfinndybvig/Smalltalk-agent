@@ -37,6 +37,9 @@ curl -sS -X POST http://localhost:8086/eval/ -H "Content-Type: application/json"
   (this is what `start-pharo-server.cmd` runs, but the .cmd is a blocking
   launcher meant for double-click use; an agent calling it in the
   foreground will time out and the kill takes the VM down with it).
+  `restart-server.cmd` wraps this for humans (health check, detached
+  start, two-VM guard) — if you use it, run it detached/background too,
+  because it polls until the server is up.
 - Never launch the GUI (`pharo-ui`) from an agent session.
 
 ## Talking to the image
@@ -105,7 +108,11 @@ the image is the authority, not the docs.
    with `PrimitiveFailed: primitive #primitiveSSLDestroy:` (check
    `PharoDebug.log` for `THERE_BE_DRAGONS_HERE`). Nothing durable is
    lost: restore from `snapshots/` or rebuild fresh and re-run
-   `demo/replay_demo.py`.
+   `demo/replay_demo.py`. **Defused in this repo:**
+   `ZdcPluginSSLSession>>finalize` now tolerates stale handles — the
+   replay installs the patch (`demo/hardening-01-ssl.json`). Snapshots
+   saved before the patch can still die this way; restoring them and
+   immediately re-running the replay's hardening step fixes them.
 
 ## In-image agent (AgentSession)
 

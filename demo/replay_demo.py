@@ -113,6 +113,11 @@ def main():
         r = post_eval(args.port, payload_file)
         print(f"   -> {json.dumps(r, ensure_ascii=False)}")
 
+    print("\n== Harden: defuse the stale-SSL-finalizer crash (ZdcPluginSSLSession>>finalize)")
+    print("   POST /eval/  <- demo/hardening-01-ssl.json")
+    r = post_eval(args.port, "hardening-01-ssl.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+
     if not args.no_export:
         print("\n== Export durable sources (Tonel) into src/")
         for package in ("GameOfLife", "GameOfLife-Tests", "AgentTerminal"):

@@ -18,7 +18,7 @@ Checking image server... up
 
 == Run tests BEFORE implementation (expect RED)
    GET /run-class-test?class_name=GameOfLifeTest
-   -> {"result": "5 ran, 0 passed, 0 skipped, 0 expected failures, 0 failures, 5 errors, 0 passed unexpected\rFailures:\r\rErrors:\rGameOfLifeTest>>#testLonelyCellDies\rGameOfLifeTest>>#testCellWithThreeNeighboursIsBorn\rGameOfLifeTest>>#testBlockIsStillLife\rGameOfLifeTest>>#testOvercrowdedCellDies\rGameOfLifeTest>>#testBlinkerOscillates\r", "success": true}
+   -> {"result": "5 ran, 0 passed, 0 skipped, 0 expected failures, 0 failures, 5 errors, 0 passed unexpected\rFailures:\r\rErrors:\rGameOfLifeTest>>#testLonelyCellDies\rGameOfLifeTest>>#testBlockIsStillLife\rGameOfLifeTest>>#testBlinkerOscillates\rGameOfLifeTest>>#testOvercrowdedCellDies\rGameOfLifeTest>>#testCellWithThreeNeighboursIsBorn\r", "success": true}
 
 == Compile the evolution rules: neighbours + nextGeneration
    POST /eval/  <- demo/05-compile-evolution.json
@@ -62,6 +62,10 @@ Checking image server... up
    -> {"result": "agentCore3", "success": true}
    POST /eval/  <- demo/agent-04-tools.json
    -> {"result": "agentCore4", "success": true}
+
+== Harden: defuse the stale-SSL-finalizer crash (ZdcPluginSSLSession>>finalize)
+   POST /eval/  <- demo/hardening-01-ssl.json
+   -> {"result": "sslHardeningVerified", "success": true}
 
 == Export durable sources (Tonel) into src/
    GET /export-package?package_name=GameOfLife&path=src/

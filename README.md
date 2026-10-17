@@ -44,6 +44,7 @@ suites — all against the running image.
 | `keepalive.st` | Startup script that keeps the headless image alive |
 | `start-pharo-server.cmd` | Double-click launcher for the headless server |
 | `start-pharo-desktop.cmd` | Double-click launcher for the Pharo desktop (GUI) |
+| `restart-server.cmd` | Health check + restart: starts the headless server if it is down, never a second VM |
 | `snapshot.cmd` / `restore.cmd` | Whole-world undo: copy/restore the image files |
 | `demo/` | The agent's actual eval payloads + one-command replay script |
 | `gen_gosper.py` | RLE verifier + eval-payload generator for the Gosper gun |
