@@ -1,0 +1,1 @@
+{"code": "GameOfLife class compile: 'diamond\n\t\"The tub: the smallest diamond-shaped still life.\n\t  0@1\n\t1@0 1@2\n\t  2@1\"\n\t^ self new withAll: { 0 @ 1. 1 @ 0. 1 @ 2. 2 @ 1 }' classified: 'patterns'. #diamondImplemented"}

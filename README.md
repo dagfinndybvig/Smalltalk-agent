@@ -240,7 +240,7 @@ misleading about this):
 GET /import-package?package_name=GameOfLife&path=<repo>/src
 ```
 
-(or re-run `demo/replay_demo.py`, which rebuilds the demo live; the diamond and fractal classes arrived through later live agent sessions — import them from `src/`).
+(or re-run `demo/replay_demo.py`, which rebuilds everything live).
 
 ## The other direction: an agent inside the image
 
