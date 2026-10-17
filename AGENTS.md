@@ -22,10 +22,11 @@ curl -sS -X POST http://localhost:8086/eval/ -H "Content-Type: application/json"
 
 - **If running:** use it. Do not start a second instance (the image files are
   single-writer; a second VM on the same image corrupts state).
-- **If not running:** start it, ideally as a background process:
-  `./pharo --headless Pharo.image st keepalive.st` from this directory, or
-  `start-pharo-server.cmd` on Windows. Wait a few seconds, then verify the
-  eval endpoint responds.
+- **If not running:** start it as a **background process** —
+  `./pharo --headless Pharo.image st keepalive.st` from this directory
+  (this is what `start-pharo-server.cmd` runs, but the .cmd is a blocking
+  launcher meant for double-click use; an agent calling it in the
+  foreground will time out and the kill takes the VM down with it).
 - Never launch the GUI (`pharo-ui`) from an agent session.
 
 ## Talking to the image
@@ -83,6 +84,17 @@ the image is the authority, not the docs.
    a symbol, string, or number: `... install. #created`.
 
 5. `crLog` does not exist in Pharo 13; use `traceCr` or `Transcript`.
+
+## Shell gotchas on Windows (Git Bash)
+
+- The `bash` tool is Git Bash, not cmd.exe: use POSIX syntax
+  (`ls`, `cat`, `/dev/null`), not Windows syntax. `dir /b` and friends
+  either fail or, with a redirect, create a literal file named `nul`.
+- Redirect to `/dev/null`, never `> nul`. If a stray `nul` file appears,
+  delete it (`rm nul` works in Git Bash) — it is gitignored.
+- Never run two VMs on the same image files. Before starting the server,
+  check whether it is already up (health check above); another agent
+  session may have started it.
 
 ## Safety
 

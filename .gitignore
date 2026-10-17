@@ -17,3 +17,6 @@ snapshots/
 
 # Scratch
 *.json.tmp
+# Windows reserved device names accidentally materialized as files
+# (e.g. `foo > nul` under Git Bash creates a literal file named nul)
+nul
