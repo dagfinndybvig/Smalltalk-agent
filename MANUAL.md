@@ -1,3 +1,5 @@
+<img width="994" height="884" alt="image" src="https://github.com/user-attachments/assets/2d2d90df-6894-46d0-bbaa-5eea1c10944b" />
+
 # MANUAL.md — A Plain User's Guide
 
 This guide explains how to use this project without assuming you know
