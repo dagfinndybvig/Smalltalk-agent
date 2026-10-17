@@ -34,6 +34,14 @@ GameOfLifeTest >> testGenerationsReturnsStateAfterNGenerations [
 ]
 
 { #category : 'as yet unclassified' }
+GameOfLifeTest >> testGosperGunFiresGliders [
+	| gun after |
+	gun := GameOfLife gosperGun.
+	after := gun generations: 60.
+	self assert: after liveCells size > (gun liveCells size + 5)
+]
+
+{ #category : 'as yet unclassified' }
 GameOfLifeTest >> testLonelyCellDies [
 	| life |
 	life := GameOfLife new withAll: { 5 @ 5 }.

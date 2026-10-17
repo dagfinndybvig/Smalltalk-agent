@@ -9,6 +9,23 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
+GameOfLife class >> gosperGun [
+	"Bill Gosper, 1970: the first known glider gun. True period 30:
+	fires one glider every 30 generations, forever. Coordinates from
+	the canonical RLE (conwaylife.com/wiki/Gosper_glider_gun)."
+	^ self new withAll: {
+		24@0.
+		22@1. 24@1.
+		12@2. 13@2. 20@2. 21@2. 34@2. 35@2.
+		11@3. 15@3. 20@3. 21@3. 34@3. 35@3.
+		0@4. 1@4. 10@4. 16@4. 20@4. 21@4.
+		0@5. 1@5. 10@5. 14@5. 16@5. 17@5. 22@5. 24@5.
+		10@6. 16@6. 24@6.
+		11@7. 15@7.
+		12@8. 13@8. }
+]
+
+{ #category : 'as yet unclassified' }
 GameOfLife >> drawOn: canvas [
 	liveCells do: [ :p |
 		canvas add: (RSBox new
@@ -102,6 +119,35 @@ GameOfLife >> openEvolutionView [
 ]
 
 { #category : 'as yet unclassified' }
+GameOfLife >> openGunView [
+	| canvas boxes extent origin gun |
+	extent := 50.
+	origin := extent // 2.
+	canvas := RSCanvas new.
+	canvas color: Color veryLightGray.
+	boxes := Dictionary new.
+	origin negated to: (extent - origin) do: [ :gx |
+		origin negated to: (extent - origin) do: [ :gy |
+			| box |
+			box := RSBox new
+				size: 16;
+				color: Color white.
+			box position: (gx * 20) @ (gy negated * 20).
+			canvas add: box.
+			boxes at: gx @ gy put: box ] ].
+	gun := GameOfLife gosperGun translatedBy: (origin negated + (extent - 36 // 2)) @ (origin negated + (extent - 9 // 2)).
+	gun paintBoxes: boxes.
+	canvas open.
+	[ | life |
+		life := gun.
+		500 timesRepeat: [
+			(Delay forMilliseconds: 250) wait.
+			life := life nextGeneration.
+			life paintBoxes: boxes.
+			canvas signalUpdate ] ] fork
+]
+
+{ #category : 'as yet unclassified' }
 GameOfLife >> openView [
 	| canvas |
 	canvas := RSCanvas new.
@@ -116,6 +162,11 @@ GameOfLife >> paintBoxes: boxes [
 		box color: ((liveCells includes: point)
 			ifTrue: [ Color black ]
 			ifFalse: [ Color white ]) ]
+]
+
+{ #category : 'as yet unclassified' }
+GameOfLife >> translatedBy: aPoint [
+	^ self class new withAll: (liveCells collect: [ :p | p + aPoint ])
 ]
 
 { #category : 'as yet unclassified' }

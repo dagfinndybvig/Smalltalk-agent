@@ -1,0 +1,1 @@
+{"code": "GameOfLifeTest compile: 'testGosperGunFiresGliders\n\t| gun after |\n\tgun := GameOfLife gosperGun.\n\tafter := gun generations: 60.\n\tself assert: after liveCells size > (gun liveCells size + 5)'. #gunTestCompiled"}
