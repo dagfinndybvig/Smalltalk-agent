@@ -48,7 +48,7 @@ python demo/replay_demo.py
 ```
 
 After step 2, the server will start automatically every time the image
-starts. After step 3, the image also contains the GameOfLife example and the Gosper glider gun
+starts. After step 3, the image also contains the GameOfLife example, the Gosper glider gun, and the in-image agent class AgentSession (inert unless MISTRAL_API_KEY is set - see the advanced section)
 (see "A tour of the demo" below).
 
 If someone already built the image and you just cloned this repository:

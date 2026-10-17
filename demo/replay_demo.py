@@ -101,6 +101,18 @@ def main():
     print(f"   GET /run-class-test?class_name=GameOfLifeTest")
     print(f"   -> {json.dumps(green2, ensure_ascii=False)}")
 
+    print("\n== Build the inside-out agent (AgentSession) - inert without MISTRAL_API_KEY")
+    for payload_file in (
+        "agent-00-create.json",
+        "agent-01-core.json",
+        "agent-02-api.json",
+        "agent-03-loop.json",
+        "agent-04-tools.json",
+    ):
+        print(f"   POST /eval/  <- demo/{payload_file}")
+        r = post_eval(args.port, payload_file)
+        print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+
     if not args.no_export:
         print("\n== Export durable sources (Tonel) into src/")
         for package in ("GameOfLife", "GameOfLife-Tests"):
@@ -114,7 +126,7 @@ def main():
         r = post_eval(args.port, "06-save-image.json")
         print(f"   -> {json.dumps(r, ensure_ascii=False)}")
 
-    print("\nDone. Live classes: GameOfLife, GameOfLifeTest (+ Gosper glider gun). Sources in src/.")
+    print("\nDone. Live classes: GameOfLife, GameOfLifeTest (+ Gosper gun, + AgentSession in-image agent). Sources in src/.")
 
 
 if __name__ == "__main__":
