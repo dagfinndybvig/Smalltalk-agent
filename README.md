@@ -33,6 +33,9 @@ suites — all against the running image.
 | `pharo`, `pharo-ui`, `pharo-vm/` | Pharo 13 launcher scripts and VM |
 | `keepalive.st` | Startup script that keeps the headless image alive |
 | `start-pharo-server.cmd` | Double-click launcher for the headless server |
+| `snapshot.cmd` / `restore.cmd` | Whole-world undo: copy/restore the image files |
+| `demo/` | The agent's actual eval payloads + one-command replay script |
+| `src/` | Durable source of truth: Tonel export of live packages |
 | `AGENTS.md` | Operating rules for AI agents working in this directory |
 | `TODO.md` | Roadmap / next steps |
 
@@ -83,14 +86,56 @@ Exposed tools: `eval`, `get_class_source`, `get_method_source`,
 `run_class_test`, `install_project`, `read_screen`, `get_settings`,
 `apply_settings`, and more.
 
-## The live demo
+## The MVP: an agent develops Conway's Game of Life, live
 
-Performed against the running image, no files involved:
+A coding agent built a package with a test suite — no files, no build
+system, no IDE. Every change was compiled into the running image through
+the SIS API, test-first. The exact payloads it sent are in `demo/`, and the
+whole sequence replays with one command:
 
-1. `Object << #Greeter slots: {}; package: 'AgenticDemo'; install`
-2. `Greeter compile: 'greet ^ 42 + 1'. Greeter new greet` → `43`
-3. `GET /get-method-source?class_name=Greeter&method_name=greet`
-   → `"greet ^ 42 + 1"`
+```
+python demo/replay_demo.py
+```
+
+What happens (actual output, abridged):
+
+```
+== Create GameOfLife class (empty shell, no behaviour yet)
+   -> {"result": "created", "success": true}
+== Compile storage: initialize/withAll:/liveCells/isAliveAt:
+   -> {"result": "storageCompiled", "success": true}
+== Create GameOfLifeTest (TestCase subclass)
+   -> {"result": "testClassCreated", "success": true}
+== Compile 5 tests describing the rules of the game
+   -> {"result": "testsCompiled", "success": true}
+== Run tests BEFORE implementation (expect RED)
+   -> "5 ran, 0 passed, 0 failures, 5 errors"
+== Compile the evolution rules: neighbours + nextGeneration
+   -> {"result": "evolutionCompiled", "success": true}
+== Run tests AFTER implementation (expect GREEN)
+   -> "5 ran, 5 passed, 0 failures, 0 errors"
+== Export durable sources (Tonel) into src/
+   -> GameOfLife exported, GameOfLife-Tests exported
+```
+
+The red run fails because `nextGeneration` does not exist yet — the tests
+describe the rules of the game before any implementation exists. Then the
+agent compiles the evolution rules into the live classes, re-runs, and the
+suite goes green. Full transcript: `demo/replay-output.txt`. Durable
+sources land in `src/` as plain Tonel files, reviewable in git.
+
+## Whole-world undo
+
+The live image is single mutable state. Before risky work, snapshot it:
+
+```
+snapshot.cmd          → snapshots\Pharo-<timestamp>.image/.changes
+restore.cmd snapshots\Pharo-20261017-140137   (stop the image first)
+```
+
+This rolls back *everything* — all classes, methods, running processes,
+objects — in one file copy. No other development environment gives an
+agent that.
 
 ## Why this matters
 

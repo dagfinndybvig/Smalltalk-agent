@@ -1,0 +1,1 @@
+{"code": "TestCase << #GameOfLifeTest slots: {}; package: 'GameOfLife-Tests'; install. #testClassCreated"}

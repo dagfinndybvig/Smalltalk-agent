@@ -80,11 +80,16 @@ instance variables — read these, they are the debugger):
 
 - The eval endpoint executes arbitrary code in a live system. Before risky
    operations (package loads, bulk refactoring, anything destructive),
-   snapshot by copying `Pharo.image` and `Pharo.changes` to a backup name;
-   restore by copying back while the image is stopped.
+   run `snapshot.cmd` (whole-world backup of the image); restore with
+   `restore.cmd snapshots\<timestamp>` while the image is stopped.
 - Do not commit `Pharo.image` / `Pharo.changes` / `PharoDebug.log` to
-  version control.
+  version control (`.gitignore` already excludes them).
 - Prefer small, idempotent evals over large scripts.
+- After meaningful live changes, keep the durable source of truth in sync:
+  export the affected package as Tonel to `src/` via
+  `GET /export-package?package_name=X&path=<abs src path>`, and commit.
+- `demo/replay_demo.py` is the reference for how a structured agent session
+  against the image should look (health check -> evals -> test runs -> export).
 
 ## Reference
 

@@ -1,0 +1,1 @@
+{"code": "GameOfLife compile: 'initialize\n\tsuper initialize.\n\tliveCells := Set new'. GameOfLife compile: 'withAll: aCollection\n\tliveCells := aCollection asSet'. GameOfLife compile: 'liveCells\n\t^ liveCells'. GameOfLife compile: 'isAliveAt: aPoint\n\t^ liveCells includes: aPoint'. #storageCompiled"}

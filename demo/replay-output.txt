@@ -1,0 +1,37 @@
+Checking image server... up
+
+== Create GameOfLife class (empty shell, no behaviour yet)
+   POST /eval/  <- demo/01-create-gol.json
+   -> {"result": "created", "success": true}
+
+== Compile storage: initialize/withAll:/liveCells/isAliveAt:
+   POST /eval/  <- demo/02-compile-storage.json
+   -> {"result": "storageCompiled", "success": true}
+
+== Create GameOfLifeTest (TestCase subclass)
+   POST /eval/  <- demo/03-create-test-class.json
+   -> {"result": "testClassCreated", "success": true}
+
+== Compile 5 tests describing the rules of the game
+   POST /eval/  <- demo/04-compile-tests.json
+   -> {"result": "testsCompiled", "success": true}
+
+== Run tests BEFORE implementation (expect RED)
+   GET /run-class-test?class_name=GameOfLifeTest
+   -> {"result": "5 ran, 0 passed, 0 skipped, 0 expected failures, 0 failures, 5 errors, 0 passed unexpected\rFailures:\r\rErrors:\rGameOfLifeTest>>#testLonelyCellDies\rGameOfLifeTest>>#testCellWithThreeNeighboursIsBorn\rGameOfLifeTest>>#testBlockIsStillLife\rGameOfLifeTest>>#testOvercrowdedCellDies\rGameOfLifeTest>>#testBlinkerOscillates\r", "success": true}
+
+== Compile the evolution rules: neighbours + nextGeneration
+   POST /eval/  <- demo/05-compile-evolution.json
+   -> {"result": "evolutionCompiled", "success": true}
+
+== Run tests AFTER implementation (expect GREEN)
+   GET /run-class-test?class_name=GameOfLifeTest
+   -> {"result": "5 ran, 5 passed, 0 skipped, 0 expected failures, 0 failures, 0 errors, 0 passed unexpected\rFailures:\r\rErrors:\r", "success": true}
+
+== Export durable sources (Tonel) into src/
+   GET /export-package?package_name=GameOfLife&path=src/
+   -> {"result": "GameOfLife exported to: /C:/Users/dybvig/Reverse/Smalltalk/src", "success": true}
+   GET /export-package?package_name=GameOfLife-Tests&path=src/
+   -> {"result": "GameOfLife-Tests exported to: /C:/Users/dybvig/Reverse/Smalltalk/src", "success": true}
+
+Done. Live classes: GameOfLife, GameOfLifeTest. Sources in src/.

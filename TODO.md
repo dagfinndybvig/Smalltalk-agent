@@ -10,20 +10,18 @@ Items are roughly ordered; see README.md for the architecture.
 - [x] MCP server registered in Vibe (`~/.vibe/config.toml`)
 - [x] Live demo: class created, method compiled and executed, source read back
 - [x] README.md / AGENTS.md documenting the setup and the Pharo 13 rules
+- [x] Git repo; durable sources as Tonel in `src/` (plain Tonel, no Iceberg yet)
+- [x] Agent-built MVP: GameOfLife developed test-first in the live image
+      (red: 5 errors -> green: 5 passed), replayable via `demo/replay_demo.py`
+- [x] Whole-world undo: `snapshot.cmd` / `restore.cmd`
+- [x] Folder trusted in Vibe; AGENTS.md auto-loads for agent sessions
 
 ## Near term — harden the PoC
 
-- [ ] Trust `C:\Users\dybvig\Reverse\Smalltalk` in Vibe (accept prompt on next
-      launch) so project-local `.vibe/` config and skills are loaded
 - [ ] Verify the `smalltalk-interop` MCP tools appear in a fresh Vibe session
       (`/mcp` status), and run a real coding task through them
-- [ ] Snapshot/restore as an agent tool: script that copies
-      `Pharo.image`/`Pharo.changes` to a timestamped backup and restores it;
-      expose via MCP or SIS endpoint
-- [ ] Durable source of truth: export `AgenticDemo` (and future work) as
-      Tonel files into a `src/` tree; decide on git + Iceberg vs plain Tonel
 - [ ] A `restart-server.cmd` / health-check helper (is the image up? port
-      8086 listening?)
+      8086 listening?) — partially covered by replay_demo.py's check
 - [ ] Decide image lifecycle: auto-start on boot (Task Scheduler / nssm as a
       Windows service) vs on-demand by the agent
 
