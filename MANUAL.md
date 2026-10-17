@@ -131,6 +131,12 @@ GameOfLife new withAll: { 0@1. 1@1. 2@1 }
 GameOfLife gosperGun openGunView
 ```
 
+```smalltalk
+"The puffer train: a B-heptomino escorted by two LWSS, crawling at
+ c/2 and leaving a dirty debris trail behind it."
+GameOfLife pufferTrain openPufferView
+```
+
 To see the code behind all this: World menu → System Browser, search
 for `GameOfLife`, and click around. Everything is readable, and — this
 is the point of Smalltalk — everything is editable while it runs.

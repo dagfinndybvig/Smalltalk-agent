@@ -26,6 +26,31 @@ GameOfLife class >> gosperGun [
 ]
 
 { #category : 'as yet unclassified' }
+GameOfLife class >> pufferTrain [
+	"The classic puffer train: a B-heptomino whose sides are
+	perturbed by two LWSS escorts. It lurches forward at c/2
+	while leaving a dirty debris trail behind (the tail keeps
+	evolving for thousands of generations). Coordinates from
+	Golly's Patterns/Life/Puffers/puffer-train.rle (Alan Hensel's
+	lifebc collection); same pattern as conwaylife.com's Puffer
+	train."
+	^ self new withAll: {
+		3@0.
+		4@1.
+		0@2. 4@2.
+		1@3. 2@3. 3@3. 4@3.
+		0@7.
+		1@8. 2@8.
+		2@9.
+		2@10.
+		1@11.
+		3@14.
+		4@15.
+		0@16. 4@16.
+		1@17. 2@17. 3@17. 4@17. }
+]
+
+{ #category : 'as yet unclassified' }
 GameOfLife >> drawOn: canvas [
 	liveCells do: [ :p |
 		canvas add: (RSBox new
@@ -141,6 +166,36 @@ GameOfLife >> openGunView [
 	[ | life |
 		life := gun.
 		500 timesRepeat: [
+			(Delay forMilliseconds: 250) wait.
+			life := life nextGeneration.
+			life paintBoxes: boxes.
+			canvas signalUpdate ] ] fork
+]
+
+{ #category : 'as yet unclassified' }
+GameOfLife >> openPufferView [
+	"The puffer train crawling across the screen, smoke trail behind."
+	| canvas boxes extent origin train |
+	extent := 60.
+	origin := extent // 2.
+	canvas := RSCanvas new.
+	canvas color: Color veryLightGray.
+	boxes := Dictionary new.
+	origin negated to: (extent - origin) do: [ :gx |
+		origin negated to: (extent - origin) do: [ :gy |
+			| box |
+			box := RSBox new
+				size: 16;
+				color: Color white.
+			box position: (gx * 20) @ (gy negated * 20).
+			canvas add: box.
+			boxes at: gx @ gy put: box ] ].
+	train := GameOfLife pufferTrain translatedBy: (origin negated + 5) @ (origin negated + (extent - 18 // 2)).
+	train paintBoxes: boxes.
+	canvas open.
+	[ | life |
+		life := train.
+		600 timesRepeat: [
 			(Delay forMilliseconds: 250) wait.
 			life := life nextGeneration.
 			life paintBoxes: boxes.

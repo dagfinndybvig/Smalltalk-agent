@@ -177,6 +177,17 @@ simulation *before* touching the image (36 cells, one extra glider per
 red, implement, green (7/7). The replay demo builds it too, so a fresh install gets the complete package. `gen_gosper.py` holds the verifier and
 payload generator; `demo/gosper-*.json` are the exact evals used.
 
+Its companion is the classic puffer train - a B-heptomino kept alive by
+two LWSS escorts, lurching across the grid at c/2 while laying a dirty
+debris trail (`GameOfLife pufferTrain openPufferView`). Same
+discipline: the canonical RLE (Golly's pattern collection, from Alan
+Hensel's lifebc) was verified by local simulation before touching the
+image - the population must grow and the engine must advance exactly
+c/2 - then driven test-first into the live system (red, implement,
+green, 8/8). `gen_puffer.py` holds the verifier and payload generator;
+`demo/puffer-*.json` are the exact evals used; the replay demo builds
+it into fresh images too.
+
 ## Whole-world undo
 
 The live image is single mutable state. Before risky work, snapshot it:

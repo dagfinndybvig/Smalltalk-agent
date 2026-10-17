@@ -101,6 +101,22 @@ def main():
     print(f"   GET /run-class-test?class_name=GameOfLifeTest")
     print(f"   -> {json.dumps(green2, ensure_ascii=False)}")
 
+    print("\n== Add the puffer train, test-first")
+    print(f"   POST /eval/  <- demo/puffer-01-test.json")
+    r = post_eval(args.port, "puffer-01-test.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+    print("\n== Run puffer test BEFORE implementation (expect RED)")
+    red3 = run_class_test(args.port, "GameOfLifeTest")
+    print(f"   GET /run-class-test?class_name=GameOfLifeTest")
+    print(f"   -> {json.dumps(red3, ensure_ascii=False)}")
+    print("\n   POST /eval/  <- demo/puffer-02-impl.json")
+    r = post_eval(args.port, "puffer-02-impl.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+    print("\n== Run all tests with the puffer (expect GREEN, 8 ran)")
+    green3 = run_class_test(args.port, "GameOfLifeTest")
+    print(f"   GET /run-class-test?class_name=GameOfLifeTest")
+    print(f"   -> {json.dumps(green3, ensure_ascii=False)}")
+
     print("\n== Build the inside-out agent (AgentSession) - inert without MISTRAL_API_KEY")
     for payload_file in (
         "agent-00-create.json",

@@ -54,3 +54,12 @@ GameOfLifeTest >> testOvercrowdedCellDies [
 	life := GameOfLife new withAll: { 0 @ 0. 0 @ 1. 0 @ 2. 1 @ 0. 1 @ 1 }.
 	self deny: (life nextGeneration isAliveAt: 1 @ 1)
 ]
+
+{ #category : 'as yet unclassified' }
+GameOfLifeTest >> testPufferTrainTravelsAndLeavesDebris [
+	| train after |
+	train := GameOfLife pufferTrain.
+	after := train generations: 40.
+	self assert: after liveCells size > train liveCells size.
+	self assert: ((after liveCells collect: #x) max - (train liveCells collect: #x) max) >= 15
+]
