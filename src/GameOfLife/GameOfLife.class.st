@@ -9,6 +9,14 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
+GameOfLife >> generations: anInteger [
+	| current |
+	current := self.
+	anInteger timesRepeat: [ current := current nextGeneration ].
+	^ current
+]
+
+{ #category : 'as yet unclassified' }
 GameOfLife >> initialize [
 	super initialize.
 	liveCells := Set new

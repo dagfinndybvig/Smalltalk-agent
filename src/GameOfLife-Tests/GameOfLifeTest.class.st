@@ -27,6 +27,13 @@ GameOfLifeTest >> testCellWithThreeNeighboursIsBorn [
 ]
 
 { #category : 'as yet unclassified' }
+GameOfLifeTest >> testGenerationsReturnsStateAfterNGenerations [
+	| life |
+	life := GameOfLife new withAll: { 0 @ 1. 1 @ 1. 2 @ 1 }.
+	self assert: (life generations: 2) liveCells equals: life liveCells
+]
+
+{ #category : 'as yet unclassified' }
 GameOfLifeTest >> testLonelyCellDies [
 	| life |
 	life := GameOfLife new withAll: { 5 @ 5 }.
