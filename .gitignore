@@ -23,3 +23,5 @@ nul
 # VM console redirection artifacts (held open while the VM runs)
 stderr
 stdout
+# Python bytecode cache (created when running gen_*.py)
+__pycache__/

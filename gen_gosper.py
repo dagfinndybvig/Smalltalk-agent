@@ -7,10 +7,7 @@ RLE = """24bo11b$22bobo11b$12b2o6b2o12b2o$11bo3bo4b2o12b2o$2o8bo5bo3b2o14b$2o8bo
 3bob2o4bobo11b$10bo5bo7bo11b$11bo3bo20b$12b2o!"""
 
 def parse_rle(rle):
-    cells, x, y = set(), 0, 0
-    for count, token in re.findall(r"(\d*)(bo|b2o|bobo|b2o\b|o|b|\$|!)", rle.replace("\n", "")):
-        pass
-    # simpler explicit parse
+    cells = set()
     i, x, y = 0, 0, 0
     while i < len(rle):
         m = re.match(r"(\d+)", rle[i:])
