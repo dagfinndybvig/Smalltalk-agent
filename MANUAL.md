@@ -139,17 +139,17 @@ GameOfLife pufferTrain openPufferView
 
 ```smalltalk
 "Fractal gallery - all generators, not data. 4096 cells."
-SierpinskiCarpet level: 4 openCarpetView
+(SierpinskiCarpet level: 4) openCarpetView
 ```
 
 ```smalltalk
 "The Heighway dragon. 2048 folds."
-DragonCurve order: 12 openDragonView
+(DragonCurve order: 12) openDragonView
 ```
 
 ```smalltalk
 "The Davis-Knuth twindragon, two colors."
-TwinDragon order: 12 openTwinDragonView
+(TwinDragon order: 12) openTwinDragonView
 ```
 
 To see the code behind all this: World menu → System Browser, search
