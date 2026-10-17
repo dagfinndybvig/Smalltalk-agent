@@ -1,4 +1,4 @@
-<img width="980" height="917" alt="conway2" src="https://github.com/user-attachments/assets/ffd42ab1-01c5-421e-9a6a-df83602f1cee" />
+<img width="986" height="875" alt="image" src="https://github.com/user-attachments/assets/a0fe3dbc-2a05-407a-9675-74626ad1acb1" />
 
 # Reverse Smalltalk — Agentic Control PoC
 
