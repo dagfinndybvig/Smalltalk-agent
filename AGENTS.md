@@ -204,6 +204,12 @@ The user may run the Pharo desktop via `start-pharo-desktop.cmd`
 - Do not commit `Pharo.image` / `Pharo.changes` / `PharoDebug.log` to
   version control (`.gitignore` already excludes them).
 - Prefer small, idempotent evals over large scripts.
+- Remove dead code frequently and completely. Live-image development
+  accumulates superseded experiments fast: strip unused selectors,
+  delete emptied classes and their tests, drop emptied packages, and
+  re-export so `src/` matches the image. Snapshot first
+  (`snapshot.cmd`); if the code might ever be wanted again, preserve
+  it on a local branch before deleting it.
 - After meaningful live changes, keep the durable source of truth in sync:
   export the affected package as Tonel to `src/` via
   `GET /export-package?package_name=X&path=<abs src path>`, save the image
