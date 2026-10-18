@@ -179,6 +179,12 @@ The user may run the Pharo desktop via `start-pharo-desktop.cmd`
   structure (classes, bounds, visibility) plus a screenshot path.
 - `Color veryLighter` does not exist in Pharo 13; use named colors
   (`Color veryLightGray`) or `lighter`.
+- The desktop wallpaper is a locked `AlphaImageMorph` installed via
+  Pharo's native `World backgroundImage: aForm layout: #scaled`
+  (`MistralCat installWallpaper`). Locked is the point: an unlocked
+  background morph gets dragged around by plain clicks. After a world
+  resize, regenerate with `python gen_wallpaper.py` (it queries the
+  live world extent through SIS) and reinstall.
 - The VM writes empty `stderr`/`stdout` files in the project root
   while running — gitignored; deletable only after the VM exits.
 - When installing complex patterns (e.g. Life patterns from RLE),
@@ -201,6 +207,20 @@ The user may run the Pharo desktop via `start-pharo-desktop.cmd`
   (`Smalltalk snapshot: true andQuit: false`), and commit.
 - `demo/replay_demo.py` is the reference for how a structured agent session
   against the image should look (health check -> evals -> test runs -> export).
+
+## Private Mistral material - never publish
+
+The Mistral-brand desktop theme and cat wallpaper are third-party
+copyright material and stay private to this machine:
+
+- `src/MistralDesktop/`, `src/MistralDesktop-Tests/`,
+  `gen_wallpaper.py`, `wallpaper.png`, `pharo-logo.png` are gitignored
+  ON PURPOSE. Never track them, never publish their contents, and keep
+  them out of public docs (README/MANUAL).
+- The theme work is preserved on the local branch `mistral-theme` -
+  do not push that branch anywhere.
+- A generic "how to build your own Pharo theme" guide is fine to
+  publish; it must not use Mistral colors, art, or branding.
 
 ## Reference
 
