@@ -147,6 +147,18 @@ not just for logic; anything deterministic can be tested.
   survives garbage collection, image loss, and rebuilds. Anything on
   the world that matters gets written to a file the moment it is
   discovered.
+- *Window geometry is image state, too.* The desktop OS window is
+  recreated at the extent stored in `World worldState
+  realWindowExtent` (`OSWorldRenderer>>doActivate` reads it when the
+  window is built), and Morphic's fullscreen preference persists in
+  `WorldMorph`'s class variable `LastScreenModeSelected`. An image saved
+  while the window was maximized or fullscreen comes back
+  screen-sized — or actually fullscreen — on every relaunch, and the
+  fullscreen toggle then *looks* broken: it toggles real fullscreen
+  and returns to the same giant window. Reset both
+  (`World worldState realWindowExtent: 1400@900`,
+  `WorldMorph classPool at: #LastScreenModeSelected put: false`),
+  save the image, and in the future save only from a windowed state.
 - *Theme-instance settings do not survive `beCurrent`.* Making a theme
   current builds a fresh instance; anything set on the old instance
   (our window shadows, for example) is gone. Bake such settings into
@@ -213,6 +225,7 @@ Every failure mode below happened to us at least once:
 | A logo crops out far more than its subject | A bounding box of matching colors swallowed same-colored neighbors | Flood-fill the largest connected region instead |
 | Desktop goes "all gray" after theme work | The background morph vanished silently — nothing errored | Reinstall, and read the world's actual structure after any churn |
 | Custom settings lost after a theme switch | `beCurrent` builds a fresh theme instance | Re-apply instance settings in the restore/toggle method |
+| Desktop relaunches "stuck in fullscreen"; the fullscreen toggle changes nothing | The window is not fullscreen — it is recreated at the extent saved in the image (`WorldState realWindowExtent`, read by `OSWorldRenderer>>doActivate`); saved while it filled the screen, it comes back screen-sized, and Morphic's fullscreen flag (`WorldMorph classPool at: #LastScreenModeSelected`) may also be stuck `true` | Eval `World worldState realWindowExtent: 1400@900` and `WorldMorph classPool at: #LastScreenModeSelected put: false`, save the image (`Smalltalk snapshot: true andQuit: false`); save future images from a windowed state |
 | The picture squishes or stretches when the window is resized | `backgroundImage:layout: #scaled` stretches the bitmap to the new bounds — non-uniformly | For a uniform-color desktop, don't use a bitmap: solid world color + a fixed-size locked logo morph. Otherwise regenerate per extent |
 | Private material about to be published | `git checkout <branch> -- <path>` stages files; deleting from disk does not unstage | Read `git show --stat HEAD` before pushing |
 

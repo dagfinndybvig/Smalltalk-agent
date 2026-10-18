@@ -170,6 +170,15 @@ The user may run the Pharo desktop via `start-pharo-desktop.cmd`
 
 - SIS still serves :8086 — health checks and evals work as usual; do
   NOT start a second VM (headless or GUI) while one is running.
+- Window geometry persists in the image: the desktop window is
+  recreated at `World worldState realWindowExtent` (read by
+  `OSWorldRenderer>>doActivate`), and Morphic's fullscreen preference
+  lives in `WorldMorph classPool at: #LastScreenModeSelected`. An
+  image saved while maximized/fullscreen relaunches screen-sized and
+  the fullscreen toggle looks stuck. Fix: set
+  `World worldState realWindowExtent: 1400@900` and the flag `false`,
+  save the image — and save future images only from a windowed state.
+  Full story in DESKTOP.md's symptom table.
 - Roassal works from eval processes: `RSCanvas new ... open` opens a
   window on the user's screen. See `GameOfLife >> openEvolutionView`
   and `openGunView` in `src/` for the working pattern (grid of boxes
