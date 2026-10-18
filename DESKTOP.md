@@ -85,7 +85,9 @@ One honest lesson from our run: applying a *theme* changes every
 window, menu, and caret at once — a heavy visual step to accept or
 reject. A wallpaper is the gentler instrument: it personalizes the
 desktop without touching any widget. Start with the wallpaper; adopt a
-theme only if the wallpaper is not enough.
+theme only if the wallpaper is not enough. And sometimes the stock
+themes are the answer: our final desktop runs the stock Pharo Dark
+theme — the custom theme we built was an education, not a need.
 
 **Even visuals can be test-first.** Our generator is deterministic
 (fixed seed), so the generated image is unit-testable: the test suite
@@ -112,6 +114,27 @@ not just for logic; anything deterministic can be tested.
   worse, reverting is one edit away — and the human will say
   "restore" sooner than you think. Reverting is not failure; it is
   the loop working.
+
+## State: defaults, toggles, and rescues
+
+- *Record the accepted state as the default, in code.* When a look is
+  approved, encode it: a `restoreDefaultDesktop` message re-applies
+  the recorded theme, the theme's world color, and clears the
+  wallpaper. "Take me back" is then one message, never a
+  reconstruction from memory.
+- *Toggle, don't stack.* A one-message toggle between the custom look
+  and the recorded default keeps both states first-class. The
+  off-state is a full restore, not a partial undo of the picture.
+- *Do not delete what you did not create.* During debugging we removed
+  a morph on the user's world as a presumed leftover; it was the
+  user's. Live memory is forgiving — a deleted morph survives until
+  garbage collection, and
+  `ImageMorph allInstances select: [ :m | m owner isNil ]` finds the
+  orphan for re-adding — but the real lesson is to ask first.
+- *Back up UI assets to files.* Forms live in memory; a PNG on disk
+  survives garbage collection, image loss, and rebuilds. Anything on
+  the world that matters gets written to a file the moment it is
+  discovered.
 
 ## Building your own setup
 
