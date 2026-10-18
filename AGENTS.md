@@ -188,6 +188,8 @@ The user may run the Pharo desktop via `start-pharo-desktop.cmd`
   the whole desktop - centered artwork, conformal field, corner logo
   cropped from the artwork - and its layout lives in the constants at
   the top of the file; revert or retune by editing those, nothing else.
+  Toggle the wallpaper on/off with `MistralCat toggleWallpaper`
+  (stock look = background morph removed, world color restored).
 - The VM writes empty `stderr`/`stdout` files in the project root
   while running — gitignored; deletable only after the VM exits.
 - When installing complex patterns (e.g. Life patterns from RLE),
