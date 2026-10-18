@@ -131,6 +131,14 @@ the image is the authority, not the docs.
    saved before the patch can still die this way; restoring them and
    immediately re-running the replay's hardening step fixes them.
 
+7. **`RPackageOrganizer` is not a global in Pharo 13** — an eval naming it
+   fails to compile with "Undeclared variable". Reach the package organizer
+   through `Smalltalk organization` instead:
+   `Smalltalk organization packageNames`,
+   `Smalltalk organization packageNamed: 'GameOfLife'`.
+   (`Smalltalk image lastImageSaveTime` does not exist either — do not use
+   it to check save state.)
+
 ## In-image agent (AgentSession)
 
 The AgentTerminal package contains AgentSession - the inside-out
@@ -241,7 +249,8 @@ The Mistral-brand desktop theme and cat wallpaper are third-party
 copyright material and stay private to this machine:
 
 - `src/MistralDesktop/`, `src/MistralDesktop-Tests/`,
-  `gen_wallpaper.py`, `wallpaper.png`, `pharo-logo.png` are gitignored
+  `gen_wallpaper.py`, `wallpaper.png`, `cat-logo.png`,
+  `pharo-banner.png` are gitignored
   ON PURPOSE. Never track them, never publish their contents, and keep
   them out of public docs (README/MANUAL).
 - The theme work is preserved on the local branch `mistral-theme` -
