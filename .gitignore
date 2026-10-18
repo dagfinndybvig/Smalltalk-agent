@@ -25,3 +25,8 @@ stderr
 stdout
 # Python bytecode cache (created when running gen_*.py)
 __pycache__/
+# Mistral-brand desktop theme - kept private (copyright), never publish.
+# Lives only in the local image, on disk, and on the local branch
+# mistral-theme.
+src/MistralDesktop/
+src/MistralDesktop-Tests/
