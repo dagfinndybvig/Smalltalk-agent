@@ -128,4 +128,4 @@ Checking image server... up
    POST /eval/  <- demo/06-save-image.json
    -> {"result": "imageSaved", "success": true}
 
-Done. Live classes: GameOfLife, GameOfLifeTest (+ Gosper gun, + AgentSession in-image agent). Sources in src/.
+Done. Live classes: GameOfLife, GameOfLifeTest, SierpinskiCarpet, DragonCurve, TwinDragon (+ Gosper gun, + puffer train, + fractal gallery, + AgentSession in-image agent). Sources in src/.

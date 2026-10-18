@@ -183,7 +183,7 @@ def main():
         r = post_eval(args.port, "06-save-image.json")
         print(f"   -> {json.dumps(r, ensure_ascii=False)}")
 
-    print("\nDone. Live classes: GameOfLife, GameOfLifeTest (+ Gosper gun, + AgentSession in-image agent). Sources in src/.")
+    print("\nDone. Live classes: GameOfLife, GameOfLifeTest, SierpinskiCarpet, DragonCurve, TwinDragon (+ Gosper gun, + puffer train, + fractal gallery, + AgentSession in-image agent). Sources in src/.")
 
 
 if __name__ == "__main__":

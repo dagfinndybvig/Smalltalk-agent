@@ -58,29 +58,8 @@ SierpinskiCarpet >> cells [
 ]
 
 { #category : 'as yet unclassified' }
-SierpinskiCarpet >> display [
-	| form |
-	form := self render.
-	(ImageMorph new image: form) openInWorld
-]
-
-{ #category : 'as yet unclassified' }
-SierpinskiCarpet >> example [
-    self new
-        initializeLevel: 3
-        size: 729;
-        display
-]
-
-{ #category : 'as yet unclassified' }
 SierpinskiCarpet >> initializeCells: aCollection [
 	cells := aCollection
-]
-
-{ #category : 'as yet unclassified' }
-SierpinskiCarpet >> initializeLevel: aLevel size: aSize [
-    level := aLevel.
-    size := aSize
 ]
 
 { #category : 'as yet unclassified' }
@@ -104,32 +83,4 @@ SierpinskiCarpet >> openCarpetView [
 	window openInWorld.
 	window position: ((World extent x - window extent x) // 2) @ 18.
 	^ window
-]
-
-{ #category : 'as yet unclassified' }
-SierpinskiCarpet >> render [
-    | form canvas |
-    form := Form extent: size asPoint depth: 32.
-    canvas := FormCanvas on: form.
-    self renderAtLevel: 0 at: 0 @ 0 on: canvas.
-    ^ form
-]
-
-{ #category : 'as yet unclassified' }
-SierpinskiCarpet >> renderAtLevel: currentLevel at: origin on: canvas [
-    | subSize rect |
-    currentLevel = level
-        ifTrue: [ 
-            rect := origin extent: size asPoint / (3 raisedTo: level - currentLevel).
-            canvas fillRectangle: rect color: Color black ]
-        ifFalse: [ 
-            subSize := size / (3 raisedTo: level - currentLevel).
-            0 to: 2 do: [ :i |
-                0 to: 2 do: [ :j |
-                    (i = 1 and: [ j = 1 ]) 
-                        ifFalse: [ 
-                            self 
-                                renderAtLevel: currentLevel + 1 
-                                at: origin + (i * subSize @ (j * subSize)) 
-                                on: canvas ] ] ] ]
 ]
