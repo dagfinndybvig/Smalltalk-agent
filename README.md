@@ -48,6 +48,7 @@ suites — all against the running image.
 | `snapshot.cmd` / `restore.cmd` | Whole-world undo: copy/restore the image files |
 | `demo/` | The agent's actual eval payloads + one-command replay script |
 | `gen_gosper.py` | RLE verifier + eval-payload generator for the Gosper gun |
+| `gen_fractals.py` | Composes the diamond + fractal replay payloads from `src/` |
 | `gen_agent.py` | Generator for the AgentSession build payloads (`demo/agent-*.json`) |
 | `src/` | Durable source of truth: Tonel export of live packages |
 | `AGENTS.md` | Operating rules for AI agents working in this directory |

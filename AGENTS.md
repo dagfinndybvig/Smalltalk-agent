@@ -184,7 +184,10 @@ The user may run the Pharo desktop via `start-pharo-desktop.cmd`
   (`MistralCat installWallpaper`). Locked is the point: an unlocked
   background morph gets dragged around by plain clicks. After a world
   resize, regenerate with `python gen_wallpaper.py` (it queries the
-  live world extent through SIS) and reinstall.
+  live world extent through SIS) and reinstall. The generator composes
+  the whole desktop - centered artwork, conformal field, corner logo
+  cropped from the artwork - and its layout lives in the constants at
+  the top of the file; revert or retune by editing those, nothing else.
 - The VM writes empty `stderr`/`stdout` files in the project root
   while running — gitignored; deletable only after the VM exits.
 - When installing complex patterns (e.g. Life patterns from RLE),

@@ -156,6 +156,22 @@ To see the code behind all this: World menu → System Browser, search
 for `GameOfLife`, and click around. Everything is readable, and — this
 is the point of Smalltalk — everything is editable while it runs.
 
+### Making the desktop yours
+
+You can put your own picture on the Pharo desktop, and build your own
+color theme. The full process — with every lesson learned doing it —
+is in [DESKTOP.md](DESKTOP.md). The short version for a wallpaper is
+one line in the Playground:
+
+```smalltalk
+World backgroundImage: (Form fromFileNamed: 'your-picture.png') layout: #scaled
+```
+
+and a custom theme is two small classes (subclass `PharoDarkTheme`,
+answer a `themeName` and a color configurator; it then appears in
+Settings → Appearance). The desktop built during this repository's
+development is private material and is not part of the published repo.
+
 ### Running the test suite from a terminal
 
 ```bash

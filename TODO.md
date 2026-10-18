@@ -29,6 +29,13 @@ Items are roughly ordered; see README.md for the architecture.
       recovered lost image from src/, live TDD red -> green (6/6),
       saved, committed, pushed
 
+- [x] Agent-driven desktop customization, live with the user watching:
+      custom wallpaper installed through Pharo's native desktop-image
+      mechanism (locked, scaled AlphaImageMorph) after several false
+      starts (unlocked morphs drag, bounding boxes lie, screenshots are
+      lossy); method and lessons documented in DESKTOP.md; the
+      specific branded desktop stays private
+
 ## Near term — harden the PoC
 
 - [x] Verify the `smalltalk-interop` MCP tools appear in a fresh Vibe session
