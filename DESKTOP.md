@@ -164,16 +164,52 @@ not just for logic; anything deterministic can be tested.
 
 ## Building your own setup
 
-With your own artwork, the whole thing is:
+With your own artwork — and this recipe is the whole method, in order:
 
-1. Write a generator (Python or Smalltalk) that crops and denoises
-   your art and renders a desktop-sized image. Parameterize it by the
-   world extent.
-2. Install it with the one-liner above, or wrap it in a class-side
-   `installWallpaper` method so it is a single message.
-3. Optionally, build a theme with the two classes above.
-4. Save the image to make it persist; keep the generator and sources
-   under version control; re-run the generator after a world resize.
+1. **Get a clean source.** The original asset, not a screenshot; if you
+   must work from a screenshot, expect washed colors and smeared edges
+   (see "Aesthetics, learned the hard way").
+2. **Write a generator** (Python, Smalltalk, anything) that:
+   - content-crops the art (bounding box of non-background pixels —
+     never hardcode crop coordinates),
+   - denoises the border and samples colors a little inside it,
+   - locates regions by flood-filling the largest *connected*
+     component, never by a bounding box of matching colors,
+   - renders at the size reported by the live image
+     (`World extent`), never a fixed size.
+3. **Install through the native mechanism:**
+
+   ```smalltalk
+   World backgroundImage: aForm layout: #scaled
+   ```
+
+   Wrap it in one class-side `installWallpaper` message.
+4. **Keep the theme stock; accent the chrome if you want more.**
+   Window border color and width in `configureWindowBorderFor:`, and
+   the title-bar stripe accents in `setStripeColorsFrom:` (stock Pharo
+   never recolors the stripes — they are `Morph`'s default blue).
+   Small patches, big effect, fully reversible.
+5. **Record your states in code.** An `install` message for the custom
+   look, a `restoreDefault` message for the stock one, and a
+   one-message toggle between them. Re-apply any theme-instance
+   settings inside the restore — they do not survive `beCurrent`.
+6. **Persist.** Save the image (`Smalltalk snapshot: true andQuit:
+   false`), keep the generator and classes under version control,
+   re-run the generator after a world resize — and if your art is
+   someone else's copyright, keep it out of the published repository.
+
+### If something goes wrong
+
+Every failure mode below happened to us at least once:
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| Clicks drag or "multiply" the background | The background morph is not locked | Install via `backgroundImage:layout:`, which locks it |
+| Huge white or gray bands across the field | Border noise or a washed-out source, propagated by edge extension | Denoise the border, sample colors inside it, get a cleaner source |
+| A logo crops out far more than its subject | A bounding box of matching colors swallowed same-colored neighbors | Flood-fill the largest connected region instead |
+| Desktop goes "all gray" after theme work | The background morph vanished silently — nothing errored | Reinstall, and read the world's actual structure after any churn |
+| Custom settings lost after a theme switch | `beCurrent` builds a fresh theme instance | Re-apply instance settings in the restore/toggle method |
+| Private material about to be published | `git checkout <branch> -- <path>` stages files; deleting from disk does not unstage | Read `git show --stat HEAD` before pushing |
 
 The Pharo image already contains everything else you need — the theme
 hierarchy, the color configurators, the icon assets (look at
