@@ -67,7 +67,11 @@ artwork.
   artwork itself — same source, same colors, so the elements match by
   construction. Invented arrangements (the artwork tucked into a
   corner, a generated mosaic field around it) were all rejected in
-  favor of what the picture already was.
+  favor of what the picture already was. And when even that was too
+  much, the accepted desktop was the simplest composition of all: one
+  uniform color — measured as the dominant color of the artwork's own
+  light square — with only the corner logo on it. Derive everything
+  from the source; invent nothing.
 
 **Theme.** Pharo 13 makes a custom theme a two-class job:
 
@@ -87,7 +91,15 @@ reject. A wallpaper is the gentler instrument: it personalizes the
 desktop without touching any widget. Start with the wallpaper; adopt a
 theme only if the wallpaper is not enough. And sometimes the stock
 themes are the answer: our final desktop runs the stock Pharo Dark
-theme — the custom theme we built was an education, not a need.
+theme — the custom theme we built was an education, not a need. We
+even re-imported and re-applied that custom theme a second time before
+reverting again: the user wanted *stock* chrome with orange accents,
+not a restyled chrome. The refined rule: **personalize the chrome, keep
+the theme stock**. Two surgical patches on stock methods deliver the
+accents — window border color/width in the theme's border
+configuration, and the title-bar stripe accents (which, it turns out,
+Pharo never recolors at all: the stock stripes are `Morph`'s default
+blue, untouched by any theme).
 
 **Even visuals can be test-first.** Our generator is deterministic
 (fixed seed), so the generated image is unit-testable: the test suite
@@ -135,6 +147,20 @@ not just for logic; anything deterministic can be tested.
   survives garbage collection, image loss, and rebuilds. Anything on
   the world that matters gets written to a file the moment it is
   discovered.
+- *Theme-instance settings do not survive `beCurrent`.* Making a theme
+  current builds a fresh instance; anything set on the old instance
+  (our window shadows, for example) is gone. Bake such settings into
+  the restore/toggle method so every state transition re-applies them.
+- *State can vanish silently — read it, don't assume it.* After a
+  stretch of theme churn, the wallpaper morph was simply gone and the
+  desktop was "all gray"; nothing had errored. After any churn, read
+  the world's actual structure (background morph present? theme?
+  colors?) instead of trusting the intended sequence of steps.
+- *`git checkout <branch> -- <path>` stages what it restores.* Deleting
+  the file from disk later does not unstage it, and a subsequent
+  commit can sweep in material that was never meant to be published.
+  Before pushing anything that touched private files, read the commit:
+  `git show --stat HEAD` — the stat line is the last line of defense.
 
 ## Building your own setup
 
