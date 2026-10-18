@@ -52,6 +52,7 @@ suites — all against the running image.
 | `src/` | Durable source of truth: Tonel export of live packages |
 | `AGENTS.md` | Operating rules for AI agents working in this directory |
 | `MANUAL.md` | Plain user's guide: setup, desktop tour, troubleshooting |
+| `DESKTOP.md` | Learning note: the agentic process of building a custom desktop (the method; the private art is not published) |
 | `TODO.md` | Roadmap / next steps |
 
 ## Starting the server
