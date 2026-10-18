@@ -61,6 +61,14 @@ artwork.
   around and it appears to "multiply". A week of Morphic wisdom in one
   selector.
 
+- *Compose from the source.* The composition that finally pleased the
+  eye was the picture's own: the artwork centered, the field extending
+  its edge colors, and a small logo in the corner cropped from the
+  artwork itself — same source, same colors, so the elements match by
+  construction. Invented arrangements (the artwork tucked into a
+  corner, a generated mosaic field around it) were all rejected in
+  favor of what the picture already was.
+
 **Theme.** Pharo 13 makes a custom theme a two-class job:
 
 - Subclass `PharoDarkTheme` (or `PharoLightTheme`). Class-side
@@ -84,6 +92,26 @@ theme only if the wallpaper is not enough.
 asserts the layout (center square, artwork position), the palette
 membership of every sampled pixel, and reproducibility. Test-first is
 not just for logic; anything deterministic can be tested.
+
+## Aesthetics, learned the hard way
+
+- *Screenshots are lossy.* A chat screenshot compresses badly: colors
+  wash into murky gray and pixel-art edges smear. Every generator
+  trick — snapping colors to a palette, recovering the pixel grid and
+  re-rendering crisp cells — fights the symptom; the cause is the
+  source. Ask for the original asset before rebuilding art from a
+  screenshot.
+- *Bounding boxes lie.* To locate a region by color, flood-fill the
+  largest connected region, not the bounding box of all matching
+  pixels. Our corner logo once cropped out the entire checkered frame
+  of the picture, because the frame contains a few small blocks of the
+  same color as the target square, and the bounding box happily
+  spanned them.
+- *Keep a restore path.* The layout lives in a handful of constants
+  (size fractions, anchors, margins). When an experiment makes things
+  worse, reverting is one edit away — and the human will say
+  "restore" sooner than you think. Reverting is not failure; it is
+  the loop working.
 
 ## Building your own setup
 
