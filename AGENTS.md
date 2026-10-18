@@ -179,22 +179,20 @@ The user may run the Pharo desktop via `start-pharo-desktop.cmd`
   structure (classes, bounds, visibility) plus a screenshot path.
 - `Color veryLighter` does not exist in Pharo 13; use named colors
   (`Color veryLightGray`) or `lighter`.
-- The desktop wallpaper is a locked `AlphaImageMorph` installed via
-  Pharo's native `World backgroundImage: aForm layout: #scaled`
-  (`MistralCat installWallpaper`). Locked is the point: an unlocked
-  background morph gets dragged around by plain clicks. After a world
-  resize, regenerate with `python gen_wallpaper.py` (it queries the
-  live world extent through SIS) and reinstall. The generator's
-  `BACKGROUND_MODE` constant switches styles: "uniform" (Cat Desktop 2
-  - the whole desktop in the light square's color with the cat logo
-  top-left) or "conformal" (centered artwork with its extended frame);
-  sizes and margins are constants at the top of the file.
-- `MistralCat toggleWallpaper` switches between the cat desktop and
-  the default (`MistralCat restoreDefaultDesktop` - morph removed,
-  PharoDarkTheme re-applied with shadows off, default world color, and
-  the Pharo banner rebuilt from pharo-banner.png at the top-left).
-  The banner belongs to the DEFAULT state and installWallpaper removes
-  it - do not treat it as a stray on the cat desktop.
+- Cat Desktop 2 is NOT a bitmap: `MistralCat installWallpaper` sets
+  the world color to the light square's yellow and adds a fixed-size
+  locked `ImageMorph` cat logo (cat-logo.png, transparent) at 24@48.
+  Solid color + fixed logo = aspect-proof; resizing the window never
+  distorts anything. `python gen_wallpaper.py` regenerates cat-logo.png
+  (its `BACKGROUND_MODE` switch also has a "conformal" full-bitmap
+  style, which IS extent-bound: regenerate per world size for that one).
+- `MistralCat toggleWallpaper` switches between Cat Desktop 2 and the
+  default (`MistralCat restoreDefaultDesktop` - logo/banner morphs
+  removed, PharoDarkTheme re-applied with shadows off, default world
+  color, and the Pharo banner rebuilt from pharo-banner.png at the
+  top-left). The world color is the state signal: `FCDC7E` = cat
+  desktop. The banner belongs to the DEFAULT state and
+  installWallpaper removes it - do not treat it as a stray.
 - One live patch to a STOCK class is intentional (in-image only, not
   exported): `SystemWindow>>setStripeColorsFrom:` colors the
   title-bar stripe accents light orange (the stock stripes are a

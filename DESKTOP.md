@@ -183,7 +183,11 @@ With your own artwork — and this recipe is the whole method, in order:
    World backgroundImage: aForm layout: #scaled
    ```
 
-   Wrap it in one class-side `installWallpaper` message.
+   Wrap it in one class-side `installWallpaper` message. But note:
+   `#scaled` *stretches to the bounds* — a bitmap wallpaper distorts
+   whenever the window's aspect ratio changes. If your desktop is one
+   uniform color, skip the bitmap entirely: a solid world color plus a
+   fixed-size, locked logo morph is aspect-proof under any resize.
 4. **Keep the theme stock; accent the chrome if you want more.**
    Window border color and width in `configureWindowBorderFor:`, and
    the title-bar stripe accents in `setStripeColorsFrom:` (stock Pharo
@@ -209,6 +213,7 @@ Every failure mode below happened to us at least once:
 | A logo crops out far more than its subject | A bounding box of matching colors swallowed same-colored neighbors | Flood-fill the largest connected region instead |
 | Desktop goes "all gray" after theme work | The background morph vanished silently — nothing errored | Reinstall, and read the world's actual structure after any churn |
 | Custom settings lost after a theme switch | `beCurrent` builds a fresh theme instance | Re-apply instance settings in the restore/toggle method |
+| The picture squishes or stretches when the window is resized | `backgroundImage:layout: #scaled` stretches the bitmap to the new bounds — non-uniformly | For a uniform-color desktop, don't use a bitmap: solid world color + a fixed-size locked logo morph. Otherwise regenerate per extent |
 | Private material about to be published | `git checkout <branch> -- <path>` stages files; deleting from disk does not unstage | Read `git show --stat HEAD` before pushing |
 
 The Pharo image already contains everything else you need — the theme
