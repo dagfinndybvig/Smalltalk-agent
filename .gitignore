@@ -33,4 +33,4 @@ src/MistralDesktop-Tests/
 # Cat wallpaper pipeline and derived images (same privacy as the theme)
 gen_wallpaper.py
 wallpaper.png
-pharo-logo.png
+pharo-banner.png
