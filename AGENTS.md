@@ -195,11 +195,10 @@ The user may run the Pharo desktop via `start-pharo-desktop.cmd`
   the Pharo banner rebuilt from pharo-banner.png at the top-left).
   The banner belongs to the DEFAULT state and installWallpaper removes
   it - do not treat it as a stray on the cat desktop.
-- Two live patches to STOCK classes are intentional (in-image only,
-  not exported): `PharoDarkTheme>>configureWindowBorderFor:` (window
-  borders in light orange, 4px) and `SystemWindow>>setStripeColorsFrom:`
-  (title-bar stripe accents in light orange; the stock stripes are a
-  never-recolored Morph default blue). Do not "fix" them back.
+- One live patch to a STOCK class is intentional (in-image only, not
+  exported): `SystemWindow>>setStripeColorsFrom:` colors the
+  title-bar stripe accents light orange (the stock stripes are a
+  never-recolored Morph default blue). Do not "fix" it back.
 - The VM writes empty `stderr`/`stdout` files in the project root
   while running — gitignored; deletable only after the VM exits.
 - When installing complex patterns (e.g. Life patterns from RLE),
