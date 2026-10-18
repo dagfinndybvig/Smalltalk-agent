@@ -184,14 +184,22 @@ The user may run the Pharo desktop via `start-pharo-desktop.cmd`
   (`MistralCat installWallpaper`). Locked is the point: an unlocked
   background morph gets dragged around by plain clicks. After a world
   resize, regenerate with `python gen_wallpaper.py` (it queries the
-  live world extent through SIS) and reinstall. The generator composes
-  the whole desktop - centered artwork, conformal field, corner logo
-  cropped from the artwork - and its layout lives in the constants at
-  the top of the file; revert or retune by editing those, nothing else.
-  Toggle with `MistralCat toggleWallpaper`: off is a FULL default
-  restore (`MistralCat restoreDefaultDesktop` - morph removed,
-  PharoDarkTheme re-applied, default world color), not just the
-  background picture.
+  live world extent through SIS) and reinstall. The generator's
+  `BACKGROUND_MODE` constant switches styles: "uniform" (Cat Desktop 2
+  - the whole desktop in the light square's color with the cat logo
+  top-left) or "conformal" (centered artwork with its extended frame);
+  sizes and margins are constants at the top of the file.
+- `MistralCat toggleWallpaper` switches between the cat desktop and
+  the default (`MistralCat restoreDefaultDesktop` - morph removed,
+  PharoDarkTheme re-applied with shadows off, default world color, and
+  the Pharo banner rebuilt from pharo-banner.png at the top-left).
+  The banner belongs to the DEFAULT state and installWallpaper removes
+  it - do not treat it as a stray on the cat desktop.
+- Two live patches to STOCK classes are intentional (in-image only,
+  not exported): `PharoDarkTheme>>configureWindowBorderFor:` (window
+  borders in light orange, 4px) and `SystemWindow>>setStripeColorsFrom:`
+  (title-bar stripe accents in light orange; the stock stripes are a
+  never-recolored Morph default blue). Do not "fix" them back.
 - The VM writes empty `stderr`/`stdout` files in the project root
   while running — gitignored; deletable only after the VM exits.
 - When installing complex patterns (e.g. Life patterns from RLE),
