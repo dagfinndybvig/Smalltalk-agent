@@ -5,28 +5,28 @@ Class {
 	#package : 'GameOfLife-Tests'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 GameOfLifeTest >> testBlinkerOscillates [
 	| next |
 	next := (GameOfLife new withAll: { 0 @ 1. 1 @ 1. 2 @ 1 }) nextGeneration.
 	self assert: next liveCells equals: { 1 @ 0. 1 @ 1. 1 @ 2 } asSet
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 GameOfLifeTest >> testBlockIsStillLife [
 	| life |
 	life := GameOfLife new withAll: { 1 @ 1. 2 @ 1. 1 @ 2. 2 @ 2 }.
 	self assert: life nextGeneration liveCells equals: life liveCells
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 GameOfLifeTest >> testCellWithThreeNeighboursIsBorn [
 	| life |
 	life := GameOfLife new withAll: { 0 @ 0. 2 @ 0. 1 @ 1 }.
 	self assert: (life nextGeneration isAliveAt: 1 @ 0)
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 GameOfLifeTest >> testDiamond [
 	| pattern nextGen |
 	pattern := GameOfLife diamond.
@@ -39,14 +39,14 @@ GameOfLifeTest >> testDiamond [
 	self assert: nextGen liveCells equals: pattern liveCells
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 GameOfLifeTest >> testGenerationsReturnsStateAfterNGenerations [
 	| life |
 	life := GameOfLife new withAll: { 0 @ 1. 1 @ 1. 2 @ 1 }.
 	self assert: (life generations: 2) liveCells equals: life liveCells
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 GameOfLifeTest >> testGosperGunFiresGliders [
 	| gun after |
 	gun := GameOfLife gosperGun.
@@ -54,21 +54,21 @@ GameOfLifeTest >> testGosperGunFiresGliders [
 	self assert: after liveCells size > (gun liveCells size + 5)
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 GameOfLifeTest >> testLonelyCellDies [
 	| life |
 	life := GameOfLife new withAll: { 5 @ 5 }.
 	self assert: life nextGeneration liveCells isEmpty
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 GameOfLifeTest >> testOvercrowdedCellDies [
 	| life |
 	life := GameOfLife new withAll: { 0 @ 0. 0 @ 1. 0 @ 2. 1 @ 0. 1 @ 1 }.
 	self deny: (life nextGeneration isAliveAt: 1 @ 1)
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 GameOfLifeTest >> testPufferTrainTravelsAndLeavesDebris [
 	| train after |
 	train := GameOfLife pufferTrain.

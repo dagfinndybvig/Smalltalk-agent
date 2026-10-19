@@ -5,11 +5,11 @@ Class {
 		'curveOne',
 		'curveTwo'
 	],
-	#category : 'GameOfLife',
-	#package : 'GameOfLife'
+	#category : 'Fractals',
+	#package : 'Fractals'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'instance creation' }
 TwinDragon class >> order: anInteger [
 	"Two Heighway dragons joined tail to tail: the second is the first
 	rotated 180 degrees around the shared starting point. The pair is
@@ -21,17 +21,17 @@ TwinDragon class >> order: anInteger [
 		second: (first collect: [ :p | p x negated @ p y negated ] as: Array)
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 TwinDragon >> curveOne [
 	^ curveOne
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 TwinDragon >> curveTwo [
 	^ curveTwo
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'drawing' }
 TwinDragon >> drawCurve: aCurve on: canvas scale: scale offset: offset margin: margin color: aColor [
 	1 to: aCurve size - 1 do: [ :i | | a b |
 		a := (((aCurve at: i) * scale) + offset) rounded + margin.
@@ -39,13 +39,13 @@ TwinDragon >> drawCurve: aCurve on: canvas scale: scale offset: offset margin: m
 		canvas line: a to: b width: 3 color: aColor ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 TwinDragon >> initializeFirst: one second: two [
 	curveOne := one.
 	curveTwo := two
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'views' }
 TwinDragon >> openTwinDragonView [
 	"Render both dragon curves to a Form at a comfortable size, centered.
 	The first dragon in black, its twin in red."

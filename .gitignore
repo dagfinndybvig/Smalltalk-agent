@@ -29,7 +29,6 @@ __pycache__/
 # Lives only in the local image, on disk, and on the local branch
 # mistral-theme.
 src/MistralDesktop/
-src/MistralDesktop-Tests/
 # Cat wallpaper pipeline and derived images (same privacy as the theme)
 gen_wallpaper.py
 wallpaper.png

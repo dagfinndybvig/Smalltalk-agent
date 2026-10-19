@@ -4,11 +4,11 @@ Class {
 	#instVars : [
 		'cells'
 	],
-	#category : 'GameOfLife',
-	#package : 'GameOfLife'
+	#category : 'Fractals',
+	#package : 'Fractals'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'geometry' }
 SierpinskiCarpet class >> cellsAtLevel: anInteger [
 	"Generate the cells programmatically: a cell belongs to the carpet
 	unless some ternary digit position has both coordinates equal to 1."
@@ -22,7 +22,7 @@ SierpinskiCarpet class >> cellsAtLevel: anInteger [
 	^ cells
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'instance creation' }
 SierpinskiCarpet class >> level: anInteger [
 	"A SierpinskiCarpet of the given recursion level: a 3^n x 3^n grid
 	where every sub-block has its middle third removed. The carpet has
@@ -30,12 +30,12 @@ SierpinskiCarpet class >> level: anInteger [
 	^ self new initializeCells: (self cellsAtLevel: anInteger)
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'instance creation' }
 SierpinskiCarpet class >> new [
     ^ super new initialize
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'geometry' }
 SierpinskiCarpet class >> ternaryConflict: x and: y atLevel: n [
 	| px py p |
 	p := 1.
@@ -47,22 +47,22 @@ SierpinskiCarpet class >> ternaryConflict: x and: y atLevel: n [
 	^ false
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'converting' }
 SierpinskiCarpet >> asGameOfLife [
 	^ GameOfLife new withAll: cells
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 SierpinskiCarpet >> cells [
 	^ cells
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 SierpinskiCarpet >> initializeCells: aCollection [
 	cells := aCollection
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'views' }
 SierpinskiCarpet >> openCarpetView [
 	"Render the carpet to a Form sized to fill the Pharo world and open
 	it in a plain window. No zooming or fitting - the pixels are exact."

@@ -11,29 +11,29 @@ Class {
 	#package : 'AgentTerminal'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'api' }
 AgentSession class >> ask: aString [
 	^ self new ask: aString
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tools' }
 AgentSession >> addString: role content: aString [
 	messages add: (Dictionary new at: 'role' put: role; at: 'content' put: aString; yourself)
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'private' }
 AgentSession >> apiKey [
 	^ OSEnvironment current at: 'MISTRAL_API_KEY' ifAbsent: [ self error: 'MISTRAL_API_KEY is not set in the environment' ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'api' }
 AgentSession >> ask: aString [
 	self log: 'USER: ', aString.
 	self addString: 'user' content: aString.
 	^ self runLoop
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tools' }
 AgentSession >> evalTool: code [
 	^ [ (self class compiler evaluate: code) printString ]
 		on: Error
@@ -42,7 +42,7 @@ AgentSession >> evalTool: code [
 			([ (e signalerContext stack copyUpTo: 12) printString ] on: Error do: [ '' ]) ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tools' }
 AgentSession >> executeToolCall: call [
 	| name args result |
 	name := (call at: 'function') at: 'name'.
@@ -58,7 +58,7 @@ AgentSession >> executeToolCall: call [
 		yourself)
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 AgentSession >> initialize [
 	super initialize.
 	model := 'mistral-small-latest'.
@@ -68,17 +68,17 @@ AgentSession >> initialize [
 	self messages add: (Dictionary new at: 'role' put: 'system'; at: 'content' put: self systemPrompt; yourself)
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'logging' }
 AgentSession >> log: aString [
 	Transcript crShow: aString
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AgentSession >> messages [
 	^ messages
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tools' }
 AgentSession >> methodSourceTool: className method: methodName [
 	| cls |
 	cls := Smalltalk globals at: className asSymbol ifAbsent: [ ^ 'No such class: ', className ].
@@ -89,7 +89,7 @@ AgentSession >> methodSourceTool: className method: methodName [
 	^ 'No such method: ', className, '>>', methodName
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tools' }
 AgentSession >> performTool: name with: args [
 	name = 'eval' ifTrue: [ ^ self evalTool: (args at: 'code') ].
 	name = 'run_tests' ifTrue: [ ^ self runTestsTool: (args at: 'class_name') ].
@@ -97,7 +97,7 @@ AgentSession >> performTool: name with: args [
 	^ 'Unknown tool: ', name
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'api' }
 AgentSession >> request [
 	| body client |
 	body := NeoJSONWriter toString: (Dictionary new
@@ -116,7 +116,7 @@ AgentSession >> request [
 	^ client post
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'running' }
 AgentSession >> runLoop [
 	| response message content |
 	iterations := iterations + 1.
@@ -136,7 +136,7 @@ AgentSession >> runLoop [
 	^ self runLoop
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tools' }
 AgentSession >> runTestsTool: className [
 	| cls result |
 	cls := Smalltalk globals at: className asSymbol ifAbsent: [ ^ 'No such class: ', className ].
@@ -144,12 +144,12 @@ AgentSession >> runTestsTool: className [
 	^ result printString
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'private' }
 AgentSession >> systemPrompt [
 	^ 'You are a coding agent operating INSIDE a live Pharo 13 Smalltalk image. You change the system by evaluating Smalltalk code via the eval tool. You MAY issue several tool calls in one turn. Pharo 13 rules: class creation is only the fluid API - Object << #Name slots: ... ; package: ...; install - and the class does not exist until install is sent; the old subclass selectors were removed. An eval is compiled entirely before it runs, so define a class in one eval and use it in a later one. String literals are single-quoted; an empty string is two single quotes; double quotes are comments. To install methods use compile: with the source as a single-quoted string: instance side example: GameOfLife compile: ''greet ^ 42''. Class side example: GameOfLife class compile: ''blinker ^ self new withAll: { 0 @ 1. 1 @ 1. 2 @ 1 }''. Double every single quote that belongs inside the method source. If the result of an eval is not a simple object, end it with a symbol like #done. The GameOfLife package with tests is loaded in this image.'
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tools' }
 AgentSession >> toolsSpec [
 	^ NeoJSONReader fromString: '[{"type":"function","function":{"name":"eval","description":"Evaluate Smalltalk code in the live image. Returns the result printString. Errors come back with description and stack.","parameters":{"type":"object","properties":{"code":{"type":"string","description":"Smalltalk code to evaluate"}},"required":["code"]}}},{"type":"function","function":{"name":"run_tests","description":"Run the SUnit test suite of a TestCase subclass in the live image.","parameters":{"type":"object","properties":{"class_name":{"type":"string"}},"required":["class_name"]}}},{"type":"function","function":{"name":"get_method_source","description":"Return the source code of a method of a class in the live image - instance side first, then class side.","parameters":{"type":"object","properties":{"class_name":{"type":"string"},"method_name":{"type":"string"}},"required":["class_name","method_name"]}}}]'
 ]

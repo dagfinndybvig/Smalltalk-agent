@@ -141,17 +141,23 @@ def main():
     print(f"   POST /eval/  <- demo/fractal-02-tests.json")
     r = post_eval(args.port, "fractal-02-tests.json")
     print(f"   -> {json.dumps(r, ensure_ascii=False)}")
-    print("\n== Run the package suite BEFORE implementations (expect RED, 22 ran)")
+    print("\n== Run the package suite BEFORE implementations (expect RED: GameOfLife green, fractals RED)")
     red5 = get(args.port, "run-package-test?package_name=GameOfLife-Tests")
     print(f"   GET /run-package-test?package_name=GameOfLife-Tests")
     print(f"   -> {json.dumps(red5, ensure_ascii=False)}")
+    red5b = get(args.port, "run-package-test?package_name=Fractals-Tests")
+    print(f"   GET /run-package-test?package_name=Fractals-Tests")
+    print(f"   -> {json.dumps(red5b, ensure_ascii=False)}")
     print("\n   POST /eval/  <- demo/fractal-03-impl.json")
     r = post_eval(args.port, "fractal-03-impl.json")
     print(f"   -> {json.dumps(r, ensure_ascii=False)}")
-    print("\n== Run the full package suite (expect GREEN, 22 ran)")
+    print("\n== Run the full package suite (expect GREEN: 9 + 13 ran)")
     green5 = get(args.port, "run-package-test?package_name=GameOfLife-Tests")
     print(f"   GET /run-package-test?package_name=GameOfLife-Tests")
     print(f"   -> {json.dumps(green5, ensure_ascii=False)}")
+    green5b = get(args.port, "run-package-test?package_name=Fractals-Tests")
+    print(f"   GET /run-package-test?package_name=Fractals-Tests")
+    print(f"   -> {json.dumps(green5b, ensure_ascii=False)}")
 
     print("\n== Build the inside-out agent (AgentSession) - inert without MISTRAL_API_KEY")
     for payload_file in (
@@ -172,7 +178,7 @@ def main():
 
     if not args.no_export:
         print("\n== Export durable sources (Tonel) into src/")
-        for package in ("GameOfLife", "GameOfLife-Tests", "AgentTerminal"):
+        for package in ("GameOfLife", "GameOfLife-Tests", "Fractals", "Fractals-Tests", "AgentTerminal"):
             path = SRC.as_posix()
             r = get(args.port, f"export-package?package_name={package}&path={path}")
             print(f"   GET /export-package?package_name={package}&path=src/")

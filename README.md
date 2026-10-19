@@ -190,7 +190,8 @@ green, 8/8). `gen_puffer.py` holds the verifier and payload generator;
 `demo/puffer-*.json` are the exact evals used; the replay demo builds
 it into fresh images too.
 
-The image also carries a small fractal gallery — generator programs,
+The image also carries a small fractal gallery in its own `Fractals`
+package (tests in `Fractals-Tests`) — generator programs,
 not data: `SierpinskiCarpet level: n` (ternary-digit exclusion rule,
 8^n cells), `DragonCurve order: n` (the Heighway dragon by
 deterministic doubling), and `TwinDragon order: n` (two dragons tail

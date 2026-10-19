@@ -4,11 +4,11 @@ Class {
 	#instVars : [
 		'points'
 	],
-	#category : 'GameOfLife',
-	#package : 'GameOfLife'
+	#category : 'Fractals',
+	#package : 'Fractals'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'geometry' }
 DragonCurve class >> dragonPointsAtOrder: anInteger [
 	"Deterministic doubling: keep the curve, then append the whole
 curve
@@ -25,7 +25,7 @@ curve
 			points ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'instance creation' }
 DragonCurve class >> order: anInteger [
 	"A Heighway dragon curve. Order 1 is a single segment; every order
 	doubles the segment count, so order n has 2^(n-1) segments and
@@ -33,12 +33,12 @@ DragonCurve class >> order: anInteger [
 	^ self new initializePoints: (self dragonPointsAtOrder: anInteger)
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 DragonCurve >> initializePoints: aCollection [
 	points := aCollection
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'views' }
 DragonCurve >> openDragonView [
 	"Render the curve to a Form scaled to fill the Pharo world and open
 	it in a plain window."
@@ -65,7 +65,7 @@ DragonCurve >> openDragonView [
 	^ window
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 DragonCurve >> points [
 	^ points asArray
 ]

@@ -248,7 +248,7 @@ The user may run the Pharo desktop via `start-pharo-desktop.cmd`
 The Mistral-brand desktop theme and cat wallpaper are third-party
 copyright material and stay private to this machine:
 
-- `src/MistralDesktop/`, `src/MistralDesktop-Tests/`,
+- `src/MistralDesktop/`,
   `gen_wallpaper.py`, `wallpaper.png`, `cat-logo.png`,
   `pharo-banner.png` are gitignored
   ON PURPOSE. Never track them, never publish their contents, and keep

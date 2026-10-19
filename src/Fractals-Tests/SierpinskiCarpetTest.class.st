@@ -1,11 +1,11 @@
 Class {
 	#name : 'SierpinskiCarpetTest',
 	#superclass : 'TestCase',
-	#category : 'GameOfLife-Tests',
-	#package : 'GameOfLife-Tests'
+	#category : 'Fractals-Tests',
+	#package : 'Fractals-Tests'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 SierpinskiCarpetTest >> testAsGameOfLife [
 	| gol |
 	gol := (SierpinskiCarpet level: 2) asGameOfLife.
@@ -14,22 +14,22 @@ SierpinskiCarpetTest >> testAsGameOfLife [
 	self deny: (gol isAliveAt: 4 @ 4)
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 SierpinskiCarpetTest >> testLevelOneHasEightCells [
 	self assert: (SierpinskiCarpet level: 1) cells size equals: 8
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 SierpinskiCarpetTest >> testLevelThreeHas512Cells [
 	self assert: (SierpinskiCarpet level: 3) cells size equals: 512
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 SierpinskiCarpetTest >> testLevelTwoHas64Cells [
 	self assert: (SierpinskiCarpet level: 2) cells size equals: 64
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 SierpinskiCarpetTest >> testLevelTwoHolesAreEmpty [
 	| carpet |
 	carpet := SierpinskiCarpet level: 2.

@@ -17,7 +17,7 @@ GameOfLife class >> diamond [
 	^ self new withAll: { 0 @ 1. 1 @ 0. 1 @ 2. 2 @ 1 }
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'patterns' }
 GameOfLife class >> gosperGun [
 	"Bill Gosper, 1970: the first known glider gun. True period 30:
 	fires one glider every 30 generations, forever. Coordinates from
@@ -34,7 +34,7 @@ GameOfLife class >> gosperGun [
 		12@8. 13@8. }
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'patterns' }
 GameOfLife class >> pufferTrain [
 	"The classic puffer train: a B-heptomino whose sides are
 	perturbed by two LWSS escorts. It lurches forward at c/2
@@ -59,7 +59,7 @@ GameOfLife class >> pufferTrain [
 		1@17. 2@17. 3@17. 4@17. }
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'drawing' }
 GameOfLife >> drawOn: canvas [
 	liveCells do: [ :p |
 		canvas add: (RSBox new
@@ -68,7 +68,7 @@ GameOfLife >> drawOn: canvas [
 			position: (p x * 22) @ (p y negated * 22)) ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'evolution' }
 GameOfLife >> generations: anInteger [
 	| current |
 	current := self.
@@ -76,38 +76,38 @@ GameOfLife >> generations: anInteger [
 	^ current
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 GameOfLife >> initialize [
 	super initialize.
 	liveCells := Set new
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 GameOfLife >> isAliveAt: aPoint [
 	^ liveCells includes: aPoint
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 GameOfLife >> liveCells [
 	^ liveCells
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'rules' }
 GameOfLife >> liveNeighborsOf: aPoint [
 	^ (self neighborsOf: aPoint) count: [ :each | liveCells includes: each ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'rules' }
 GameOfLife >> neighborOffsets [
 	^ { -1 @ -1. 0 @ -1. 1 @ -1. -1 @ 0. 1 @ 0. -1 @ 1. 0 @ 1. 1 @ 1 }
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'rules' }
 GameOfLife >> neighborsOf: aPoint [
 	^ self neighborOffsets collect: [ :each | aPoint + each ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'evolution' }
 GameOfLife >> nextGeneration [
 	| candidates next |
 	candidates := Set new.
@@ -124,7 +124,7 @@ GameOfLife >> nextGeneration [
 	^ self class new withAll: next
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'views' }
 GameOfLife >> openEvolutionView [
 	| canvas boxes origin extent |
 	extent := 30.
@@ -152,7 +152,7 @@ GameOfLife >> openEvolutionView [
 			canvas signalUpdate ] ] fork
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'views' }
 GameOfLife >> openGunView [
 	| canvas boxes extent origin gun |
 	extent := 50.
@@ -181,7 +181,7 @@ GameOfLife >> openGunView [
 			canvas signalUpdate ] ] fork
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'views' }
 GameOfLife >> openPufferView [
 	"The puffer train crawling across the screen, smoke trail behind."
 	| canvas boxes extent origin train |
@@ -211,7 +211,7 @@ GameOfLife >> openPufferView [
 			canvas signalUpdate ] ] fork
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'views' }
 GameOfLife >> openView [
 	| canvas |
 	canvas := RSCanvas new.
@@ -220,7 +220,7 @@ GameOfLife >> openView [
 	^ canvas open
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'drawing' }
 GameOfLife >> paintBoxes: boxes [
 	boxes keysAndValuesDo: [ :point :box |
 		box color: ((liveCells includes: point)
@@ -228,12 +228,12 @@ GameOfLife >> paintBoxes: boxes [
 			ifFalse: [ Color white ]) ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 GameOfLife >> translatedBy: aPoint [
 	^ self class new withAll: (liveCells collect: [ :p | p + aPoint ])
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'instance creation' }
 GameOfLife >> withAll: aCollection [
 	liveCells := aCollection asSet
 ]
