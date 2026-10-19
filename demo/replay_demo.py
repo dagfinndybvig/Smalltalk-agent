@@ -235,6 +235,23 @@ def main():
     r = post_eval(args.port, "notepad-10-acceptwin.json")
     print(f"   -> {json.dumps(r, ensure_ascii=False)}")
 
+    print("\n== Fix saving editor Text (Rubric returns Text, not String - the file")
+    print("   stream chokes on it, leaving a 0-byte file and no file ivar)")
+    print(f"   POST /eval/  <- demo/notepad-11-text-test.json")
+    r = post_eval(args.port, "notepad-11-text-test.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+    print("\n== Run Notepad tests BEFORE the Text fix (expect RED, 1 error)")
+    red10 = run_class_test(args.port, "NotepadTest")
+    print(f"   GET /run-class-test?class_name=NotepadTest")
+    print(f"   -> {json.dumps(red10, ensure_ascii=False)}")
+    print(f"   POST /eval/  <- demo/notepad-12-text-impl.json")
+    r = post_eval(args.port, "notepad-12-text-impl.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+    print("\n== Run Notepad tests (expect GREEN, 13 ran)")
+    green10 = run_class_test(args.port, "NotepadTest")
+    print(f"   GET /run-class-test?class_name=NotepadTest")
+    print(f"   -> {json.dumps(green10, ensure_ascii=False)}")
+
     print("\n== Build the inside-out agent (AgentSession) - inert without MISTRAL_API_KEY")
     for payload_file in (
         "agent-00-create.json",

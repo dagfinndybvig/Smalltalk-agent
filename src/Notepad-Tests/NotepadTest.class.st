@@ -86,6 +86,20 @@ NotepadTest >> testSaveToWritesFile [
 	f ensureDelete
 ]
 
+{ #category : 'tests - saving' }
+NotepadTest >> testSaveToWritesTextContent [
+	"editor text is a Text, not a String - saving must write its
+	characters instead of failing with
+	doesNotUnderstand: #isByteString (which leaves a 0-byte file
+	and never sets the file ivar)."
+	| n tmp |
+	n := Notepad on: 'save me'.
+	n text: 'save me' asText.
+	tmp := FileLocator temp / 'notepad-test-save.txt'.
+	n saveTo: tmp.
+	self assert: tmp contents = 'save me'
+]
+
 { #category : 'tests' }
 NotepadTest >> testSaveUsesFile [
 	| n f |

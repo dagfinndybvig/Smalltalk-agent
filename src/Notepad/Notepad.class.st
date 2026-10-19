@@ -125,7 +125,16 @@ Notepad >> saveAs [
 
 { #category : 'saving' }
 Notepad >> saveTo: aFileReference [
-	aFileReference writeStreamDo: [ :stream | stream nextPutAll: text ].
+	"Write the text to aFileReference. text is a Text once the editor
+	has accepted it (Rubric returns Text, not String), so convert
+	before writing - the file stream chokes on a raw Text
+	(doesNotUnderstand: #isByteString). The stream is closed in an
+	ensure: so a failed write never leaks the OS file handle (a
+	leaked handle locks the file until the stream is closed)."
+	| stream |
+	stream := aFileReference writeStream.
+	[stream nextPutAll: text asString]
+		ensure: [stream close].
 	file := aFileReference.
 	self updateTitle.
 	^ aFileReference
