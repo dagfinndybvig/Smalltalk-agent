@@ -144,14 +144,25 @@ the image is the authority, not the docs.
    Ctrl+S on Windows produces the combination **Ctrl + S** — the two never
    compare equal (`KMKeyCombination>>matchesCompletely:`), so the keystroke
    is silently dropped (the `#selectAllPatchForWin` entry in the same keymap
-   shows the platform gap is known). If a tool needs Ctrl+S, bind it on the
-   morph itself: `morph bindKeyCombination: KMModifier ctrl +
-   $s asKeyCombination toAction: [...]` (stored in the morph's
+   shows the platform gap is known). If a tool needs Ctrl+S, bind it with
+   `morph bindKeyCombination: KMModifier ctrl + $s asKeyCombination
+   toAction: [...]` (stored in the morph's
    `kmDispatcher directKeymaps commonEntries`, NOT in `keyBindings` — that
-   accessor does not exist on Morph). Synthetic-event debugging tip: on
-   Windows, `keyValue` is the virtual key code (S = 83, not ASCII 115 =
-   VK_F4), and the modifier bits as seen by `asKeyCombination` are
-   8=Shift, 16=Ctrl, 32=Alt, 64=Cmd.
+   accessor does not exist on Morph). Three traps learned the hard way:
+   (a) only the **keyboard-focus morph's** dispatcher is consulted for a
+   real keystroke, and focus sits on the inner text area, not your container
+   morph — bind on BOTH; (b) Rubric **wipes/replaces build-time text-area
+   bindings when the editor is opened** — install the text-area binding
+   AFTER `openInWorld` (see `Notepad>>bindCtrlSOn:` called from `openView`);
+   (c) patching the shared `RubTextEditor` KMCategory in KMRepository only
+   affects editors created AFTER the patch (the category is copied into the
+   dispatcher at attach time), so it never fixes already-open editors.
+   Synthetic-event debugging tip: on Windows, `keyValue` is the virtual key
+   code (S = 83, not ASCII 115 = VK_F4), and the modifier bits as seen by
+   `asKeyCombination` are 8=Shift, 16=Ctrl, 32=Alt, 64=Cmd. A matching
+   synthetic event can be fired with
+   `focusMorph kmDispatcher dispatchKeystroke: evt` — expect the SpDialog
+   to open MODALLY and block the calling process.
 
 ## In-image agent (AgentSession)
 

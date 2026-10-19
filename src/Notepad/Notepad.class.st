@@ -22,13 +22,28 @@ Notepad class >> open [
 ]
 
 { #category : 'views' }
+Notepad >> bindCtrlSOn: aMorph [
+	"Bind Ctrl+S on a LIVE morph of the open editor. Called from
+	openView after openInWorld: Rubric replaces the editing area when
+	the morph is opened, so bindings installed in buildEditor on the
+	text area are lost. Only the keyboard-focus morph's KM dispatcher
+	is consulted for a real keystroke, and focus sits on the text
+	area - hence this late binding. Needed on Windows because
+	Rubric's own Meta+S accept shortcut never matches a physical
+	Ctrl+S there (Meta != Ctrl)."
+	aMorph bindKeyCombination: KMModifier ctrl + $s asKeyCombination toAction: [ self textAccepted. true ]
+]
+
+{ #category : 'views' }
 Notepad >> buildEditor [
 	"The Rubric editor for openView. alwaysAccept makes Ctrl+S work
 	even when Rubric sees no unaccepted edits - without it the morph
-	just flashes and never announces RubTextAccepted. The explicit
-	Ctrl+S binding is needed on Windows: Rubric's own Meta+S accept
-	shortcut never matches a physical Ctrl+S there (Meta != Ctrl),
-	so without this the keystroke is silently dropped."
+	just flashes and never announces RubTextAccepted. The morph-level
+	Ctrl+S binding covers the case where the outer morph holds
+	keyboard focus; the text area gets its binding in openView via
+	bindCtrlSOn: (Rubric wipes build-time text-area bindings on
+	open). Needed on Windows: Rubric's own Meta+S accept shortcut
+	never matches a physical Ctrl+S there (Meta != Ctrl)."
 	| morph |
 	morph := RubScrolledTextMorph new.
 	morph beWrapped.
@@ -80,6 +95,7 @@ Notepad >> openView [
 	window extent: 500 @ 400.
 	window openInWorld.
 	window position: 60 @ 60.
+	self bindCtrlSOn: editor textArea.
 	^ window
 ]
 

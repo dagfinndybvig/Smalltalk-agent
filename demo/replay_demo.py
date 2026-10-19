@@ -229,6 +229,12 @@ def main():
     print(f"   GET /run-class-test?class_name=NotepadTest")
     print(f"   -> {json.dumps(green9, ensure_ascii=False)}")
 
+    print("\n== Patch the shared RubTextEditor KMCategory with a Windows Ctrl+S accept")
+    print("   (only affects Rubric editors created after this point)")
+    print(f"   POST /eval/  <- demo/notepad-10-acceptwin.json")
+    r = post_eval(args.port, "notepad-10-acceptwin.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+
     print("\n== Build the inside-out agent (AgentSession) - inert without MISTRAL_API_KEY")
     for payload_file in (
         "agent-00-create.json",

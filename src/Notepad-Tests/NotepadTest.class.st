@@ -17,6 +17,20 @@ NotepadTest >> testAcceptWithFileSaves [
 	f ensureDelete
 ]
 
+{ #category : 'tests - editor' }
+NotepadTest >> testBindCtrlSOnTextArea [
+	"Keyboard focus sits on the text area and only the focus
+	morph's KM dispatcher is consulted for a real keystroke;
+	bindCtrlSOn: is called from openView on the live text area
+	(build-time bindings are wiped when Rubric opens the editor)."
+	| n area |
+	n := Notepad on: 'x'.
+	area := RubScrolledTextMorph new textArea.
+	n bindCtrlSOn: area.
+	self assert: (area kmDispatcher directKeymaps commonEntries keymaps
+		anySatisfy: [:entry | entry shortcut = (KMModifier ctrl + $s asKeyCombination)])
+]
+
 { #category : 'tests' }
 NotepadTest >> testBuildEditorAlwaysAccepts [
 	| n m |
@@ -30,7 +44,7 @@ NotepadTest >> testBuildEditorAlwaysAccepts [
 NotepadTest >> testBuildEditorBindsCtrlS [
 	"On Windows, Rubric's own Meta+S accept binding never matches a
 	physical Ctrl+S (Meta != Ctrl there), so Notepad binds Ctrl+S on
-	the morph's own KM dispatcher."
+	the editor morph itself."
 	| n morph |
 	n := Notepad on: 'x'.
 	morph := n buildEditor.
