@@ -11,11 +11,6 @@ Class {
 	#package : 'AgentTerminal'
 }
 
-{ #category : 'api' }
-AgentSession class >> ask: aString [
-	^ self new ask: aString
-]
-
 { #category : 'tools' }
 AgentSession >> addString: role content: aString [
 	messages add: (Dictionary new at: 'role' put: role; at: 'content' put: aString; yourself)

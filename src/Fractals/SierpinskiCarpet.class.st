@@ -30,11 +30,6 @@ SierpinskiCarpet class >> level: anInteger [
 	^ self new initializeCells: (self cellsAtLevel: anInteger)
 ]
 
-{ #category : 'instance creation' }
-SierpinskiCarpet class >> new [
-    ^ super new initialize
-]
-
 { #category : 'geometry' }
 SierpinskiCarpet class >> ternaryConflict: x and: y atLevel: n [
 	| px py p |
