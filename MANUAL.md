@@ -155,10 +155,23 @@ GameOfLife pufferTrain openPufferView
 ```smalltalk
 "Notepad: a plain writing window (wrapped text). Type, then Ctrl+S:
 with no file yet, a save-as dialog opens; afterwards Ctrl+S writes
-silently and the title bar shows the file. Agents can skip the dialog:
-  (Notepad on: 'draft') saveTo: 'notes.txt' asFileReference; openView
-From an agent, Notepad open gives you an untitled scratch window."
-Notepad open
+silently and the title bar shows the file. (On Windows this needs
+the explicit Ctrl+S binding Notepad installs - Rubric's own accept
+shortcut is Meta+S there and never fires.)"
+(Notepad on: 'draft') openView
+```
+
+```smalltalk
+"Open an existing file: load its contents and bind the file, so
+Ctrl+S writes back to it."
+| f |
+f := FileLocator documents / 'notes.txt'.
+(Notepad on: f contents) file: f; openView
+```
+
+```smalltalk
+"Agents can skip the dialog entirely:"
+(Notepad on: 'draft') saveTo: 'notes.txt' asFileReference; openView
 ```
 
 To see the code behind all this: World menu → System Browser, search
