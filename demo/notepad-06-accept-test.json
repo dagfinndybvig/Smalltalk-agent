@@ -1,0 +1,1 @@
+{"code": "NotepadTest compile: 'testBuildEditorAlwaysAccepts\n\t| n m |\n\tn := Notepad on: ''x''.\n\tm := n buildEditor.\n\tself assert: m alwaysAccept.\n\tself assert: m text asString equals: ''x''' classified: 'tests'.\n#editorTestCompiled"}

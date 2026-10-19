@@ -197,6 +197,22 @@ def main():
     print(f"   GET /run-class-test?class_name=NotepadTest")
     print(f"   -> {json.dumps(green7, ensure_ascii=False)}")
 
+    print("\n== Fix Ctrl+S when Rubric sees no unaccepted edits (alwaysAccept)")
+    print(f"   POST /eval/  <- demo/notepad-06-accept-test.json")
+    r = post_eval(args.port, "notepad-06-accept-test.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+    print("\n== Run Notepad tests BEFORE the accept fix (expect RED, 1 error)")
+    red8 = run_class_test(args.port, "NotepadTest")
+    print(f"   GET /run-class-test?class_name=NotepadTest")
+    print(f"   -> {json.dumps(red8, ensure_ascii=False)}")
+    print(f"   POST /eval/  <- demo/notepad-07-accept-impl.json")
+    r = post_eval(args.port, "notepad-07-accept-impl.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+    print("\n== Run Notepad tests (expect GREEN, 10 ran)")
+    green8 = run_class_test(args.port, "NotepadTest")
+    print(f"   GET /run-class-test?class_name=NotepadTest")
+    print(f"   -> {json.dumps(green8, ensure_ascii=False)}")
+
     print("\n== Build the inside-out agent (AgentSession) - inert without MISTRAL_API_KEY")
     for payload_file in (
         "agent-00-create.json",

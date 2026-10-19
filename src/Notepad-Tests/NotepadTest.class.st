@@ -6,6 +6,40 @@ Class {
 }
 
 { #category : 'tests' }
+NotepadTest >> testAcceptWithFileSaves [
+	| n f |
+	f := FileLocator temp / 'notepad-test-accept.txt'.
+	f ensureDelete.
+	n := Notepad on: 'accepted'.
+	n file: f.
+	n textAccepted.
+	self assert: f contents equals: 'accepted'.
+	f ensureDelete
+]
+
+{ #category : 'tests' }
+NotepadTest >> testBuildEditorAlwaysAccepts [
+	| n m |
+	n := Notepad on: 'x'.
+	m := n buildEditor.
+	self assert: m alwaysAccept.
+	self assert: m text asString equals: 'x'
+]
+
+{ #category : 'tests' }
+NotepadTest >> testLabelStringWithFile [
+	| n |
+	n := Notepad new.
+	n file: 'notes.txt' asFileReference.
+	self assert: n labelString equals: 'Notepad - notes.txt'
+]
+
+{ #category : 'tests' }
+NotepadTest >> testLabelStringWithoutFile [
+	self assert: Notepad new labelString equals: 'Notepad'
+]
+
+{ #category : 'tests' }
 NotepadTest >> testNewIsEmpty [
 	self assert: Notepad new text isEmpty
 ]

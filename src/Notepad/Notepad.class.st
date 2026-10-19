@@ -21,6 +21,24 @@ Notepad class >> open [
 	^ self new openView
 ]
 
+{ #category : 'views' }
+Notepad >> buildEditor [
+	"The Rubric editor for openView. alwaysAccept makes Ctrl+S work
+	even when Rubric sees no unaccepted edits - without it the morph
+	just flashes and never announces RubTextAccepted."
+	| morph |
+	morph := RubScrolledTextMorph new.
+	morph beWrapped.
+	morph alwaysAccept: true.
+	morph setText: text.
+	editor := morph.
+	morph textArea announcer
+		when: RubTextAccepted
+		send: #textAccepted
+		to: self.
+	^ morph
+]
+
 { #category : 'accessing' }
 Notepad >> file [
 	^ file
@@ -50,20 +68,11 @@ Notepad >> labelString [
 
 { #category : 'views' }
 Notepad >> openView [
-	"Open a wrapped Rubric editor on the text. Ctrl+S (accept) saves:
-	to the set file, or via a save-as dialog when none is set."
-	| morph |
-	morph := RubScrolledTextMorph new.
-	morph beWrapped.
-	morph setText: text.
-	editor := morph.
-	morph textArea announcer
-		when: RubTextAccepted
-		send: #textAccepted
-		to: self.
+	"Open a wrapped Rubric editor on the text. Ctrl+S saves: to the
+	set file, or via a save-as dialog when none is set."
 	window := SystemWindow new.
 	window setLabel: self labelString.
-	window addMorph: morph frame: (0 @ 0 corner: 1 @ 1).
+	window addMorph: self buildEditor frame: (0 @ 0 corner: 1 @ 1).
 	window extent: 500 @ 400.
 	window openInWorld.
 	window position: 60 @ 60.
