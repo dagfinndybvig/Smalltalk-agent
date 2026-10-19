@@ -152,6 +152,14 @@ GameOfLife pufferTrain openPufferView
 (TwinDragon order: 12) openTwinDragonView
 ```
 
+```smalltalk
+"Notepad: a plain writing window (wrapped text). Type, then Ctrl+S
+(accept) saves to the file set via saveTo: - set one first with:
+  (Notepad on: 'draft') saveTo: 'notes.txt' asFileReference; openView
+From an agent, Notepad open gives you an untitled scratch window."
+Notepad open
+```
+
 To see the code behind all this: World menu → System Browser, search
 for `GameOfLife`, and click around. Everything is readable, and — this
 is the point of Smalltalk — everything is editable while it runs.

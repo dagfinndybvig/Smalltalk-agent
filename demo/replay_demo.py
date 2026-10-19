@@ -159,6 +159,25 @@ def main():
     print(f"   GET /run-package-test?package_name=Fractals-Tests")
     print(f"   -> {json.dumps(green5b, ensure_ascii=False)}")
 
+    print("\n== Add Notepad, a plain writing tool, test-first")
+    print(f"   POST /eval/  <- demo/notepad-01-classes.json")
+    r = post_eval(args.port, "notepad-01-classes.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+    print(f"   POST /eval/  <- demo/notepad-02-tests.json")
+    r = post_eval(args.port, "notepad-02-tests.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+    print("\n== Run Notepad tests BEFORE implementation (expect RED, 5 errors)")
+    red6 = run_class_test(args.port, "NotepadTest")
+    print(f"   GET /run-class-test?class_name=NotepadTest")
+    print(f"   -> {json.dumps(red6, ensure_ascii=False)}")
+    print(f"\n   POST /eval/  <- demo/notepad-03-impl.json")
+    r = post_eval(args.port, "notepad-03-impl.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+    print("\n== Run Notepad tests (expect GREEN, 6 ran)")
+    green6 = run_class_test(args.port, "NotepadTest")
+    print(f"   GET /run-class-test?class_name=NotepadTest")
+    print(f"   -> {json.dumps(green6, ensure_ascii=False)}")
+
     print("\n== Build the inside-out agent (AgentSession) - inert without MISTRAL_API_KEY")
     for payload_file in (
         "agent-00-create.json",
@@ -178,7 +197,7 @@ def main():
 
     if not args.no_export:
         print("\n== Export durable sources (Tonel) into src/")
-        for package in ("GameOfLife", "GameOfLife-Tests", "Fractals", "Fractals-Tests", "AgentTerminal"):
+        for package in ("GameOfLife", "GameOfLife-Tests", "Fractals", "Fractals-Tests", "Notepad", "Notepad-Tests", "AgentTerminal"):
             path = SRC.as_posix()
             r = get(args.port, f"export-package?package_name={package}&path={path}")
             print(f"   GET /export-package?package_name={package}&path=src/")

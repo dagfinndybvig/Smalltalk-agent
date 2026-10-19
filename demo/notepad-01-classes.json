@@ -1,0 +1,1 @@
+{"code": "Object << #Notepad\n\tslots: { #text. #file. };\n\tpackage: 'Notepad';\n\tinstall.\nTestCase << #NotepadTest\n\tslots: { };\n\tpackage: 'Notepad-Tests';\n\tinstall.\n#notepadClassesCreated"}
