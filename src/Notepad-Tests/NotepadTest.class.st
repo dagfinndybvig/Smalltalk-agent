@@ -26,6 +26,18 @@ NotepadTest >> testBuildEditorAlwaysAccepts [
 	self assert: m text asString equals: 'x'
 ]
 
+{ #category : 'tests - editor' }
+NotepadTest >> testBuildEditorBindsCtrlS [
+	"On Windows, Rubric's own Meta+S accept binding never matches a
+	physical Ctrl+S (Meta != Ctrl there), so Notepad binds Ctrl+S on
+	the morph's own KM dispatcher."
+	| n morph |
+	n := Notepad on: 'x'.
+	morph := n buildEditor.
+	self assert: (morph kmDispatcher directKeymaps commonEntries keymaps
+		anySatisfy: [:entry | entry shortcut = (KMModifier ctrl + $s asKeyCombination)])
+]
+
 { #category : 'tests' }
 NotepadTest >> testLabelStringWithFile [
 	| n |

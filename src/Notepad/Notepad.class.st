@@ -25,12 +25,16 @@ Notepad class >> open [
 Notepad >> buildEditor [
 	"The Rubric editor for openView. alwaysAccept makes Ctrl+S work
 	even when Rubric sees no unaccepted edits - without it the morph
-	just flashes and never announces RubTextAccepted."
+	just flashes and never announces RubTextAccepted. The explicit
+	Ctrl+S binding is needed on Windows: Rubric's own Meta+S accept
+	shortcut never matches a physical Ctrl+S there (Meta != Ctrl),
+	so without this the keystroke is silently dropped."
 	| morph |
 	morph := RubScrolledTextMorph new.
 	morph beWrapped.
 	morph alwaysAccept: true.
 	morph setText: text.
+	morph bindKeyCombination: KMModifier ctrl + $s asKeyCombination toAction: [ self textAccepted. true ].
 	editor := morph.
 	morph textArea announcer
 		when: RubTextAccepted

@@ -213,6 +213,22 @@ def main():
     print(f"   GET /run-class-test?class_name=NotepadTest")
     print(f"   -> {json.dumps(green8, ensure_ascii=False)}")
 
+    print("\n== Bind a real Ctrl+S on the morph (Rubric's Meta+S never matches on Windows)")
+    print(f"   POST /eval/  <- demo/notepad-08-ctrls-test.json")
+    r = post_eval(args.port, "notepad-08-ctrls-test.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+    print("\n== Run Notepad tests BEFORE the Ctrl+S binding (expect RED, 1 error)")
+    red9 = run_class_test(args.port, "NotepadTest")
+    print(f"   GET /run-class-test?class_name=NotepadTest")
+    print(f"   -> {json.dumps(red9, ensure_ascii=False)}")
+    print(f"   POST /eval/  <- demo/notepad-09-ctrls-impl.json")
+    r = post_eval(args.port, "notepad-09-ctrls-impl.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+    print("\n== Run Notepad tests (expect GREEN, 11 ran)")
+    green9 = run_class_test(args.port, "NotepadTest")
+    print(f"   GET /run-class-test?class_name=NotepadTest")
+    print(f"   -> {json.dumps(green9, ensure_ascii=False)}")
+
     print("\n== Build the inside-out agent (AgentSession) - inert without MISTRAL_API_KEY")
     for payload_file in (
         "agent-00-create.json",

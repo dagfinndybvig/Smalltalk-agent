@@ -139,6 +139,20 @@ the image is the authority, not the docs.
    (`Smalltalk image lastImageSaveTime` does not exist either — do not use
    it to check save state.)
 
+8. **Rubric's Ctrl+S (accept) shortcut is dead on Windows.** The stock
+   `RubTextEditor` keymap registers accept as **Meta + S**, but a physical
+   Ctrl+S on Windows produces the combination **Ctrl + S** — the two never
+   compare equal (`KMKeyCombination>>matchesCompletely:`), so the keystroke
+   is silently dropped (the `#selectAllPatchForWin` entry in the same keymap
+   shows the platform gap is known). If a tool needs Ctrl+S, bind it on the
+   morph itself: `morph bindKeyCombination: KMModifier ctrl +
+   $s asKeyCombination toAction: [...]` (stored in the morph's
+   `kmDispatcher directKeymaps commonEntries`, NOT in `keyBindings` — that
+   accessor does not exist on Morph). Synthetic-event debugging tip: on
+   Windows, `keyValue` is the virtual key code (S = 83, not ASCII 115 =
+   VK_F4), and the modifier bits as seen by `asKeyCombination` are
+   8=Shift, 16=Ctrl, 32=Alt, 64=Cmd.
+
 ## In-image agent (AgentSession)
 
 The AgentTerminal package contains AgentSession - the inside-out
