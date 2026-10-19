@@ -153,8 +153,9 @@ GameOfLife pufferTrain openPufferView
 ```
 
 ```smalltalk
-"Notepad: a plain writing window (wrapped text). Type, then Ctrl+S
-(accept) saves to the file set via saveTo: - set one first with:
+"Notepad: a plain writing window (wrapped text). Type, then Ctrl+S:
+with no file yet, a save-as dialog opens; afterwards Ctrl+S writes
+silently and the title bar shows the file. Agents can skip the dialog:
   (Notepad on: 'draft') saveTo: 'notes.txt' asFileReference; openView
 From an agent, Notepad open gives you an untitled scratch window."
 Notepad open

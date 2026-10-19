@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'text',
 		'file',
-		'editor'
+		'editor',
+		'window'
 	],
 	#category : 'Notepad',
 	#package : 'Notepad'
@@ -43,24 +44,38 @@ Notepad >> initializeText: aString [
 ]
 
 { #category : 'views' }
+Notepad >> labelString [
+	^ 'Notepad', (file ifNotNil: [ ' - ', file basename ] ifNil: [ '' ])
+]
+
+{ #category : 'views' }
 Notepad >> openView [
-	"Open a wrapped Rubric editor on the text. Ctrl+S (accept) updates
-	the model and, when a file is set, saves to it."
-	| window |
-	editor := RubScrolledTextMorph new.
-	editor beWrapped.
-	editor setText: text.
-	editor textArea announcer
+	"Open a wrapped Rubric editor on the text. Ctrl+S (accept) saves:
+	to the set file, or via a save-as dialog when none is set."
+	| morph |
+	morph := RubScrolledTextMorph new.
+	morph beWrapped.
+	morph setText: text.
+	editor := morph.
+	morph textArea announcer
 		when: RubTextAccepted
 		send: #textAccepted
 		to: self.
 	window := SystemWindow new.
-	window setLabel: 'Notepad', (file ifNotNil: [ ' - ', file basename ] ifNil: [ '' ]).
-	window addMorph: editor frame: (0 @ 0 corner: 1 @ 1).
+	window setLabel: self labelString.
+	window addMorph: morph frame: (0 @ 0 corner: 1 @ 1).
 	window extent: 500 @ 400.
 	window openInWorld.
 	window position: 60 @ 60.
 	^ window
+]
+
+{ #category : 'saving' }
+Notepad >> requestSaveFileReference [
+	^ UIManager default
+		chooseForSaveFileReference: 'Save Notepad as...'
+		extensions: #( 'txt' )
+		path: FileLocator documents
 ]
 
 { #category : 'saving' }
@@ -70,9 +85,20 @@ Notepad >> save [
 ]
 
 { #category : 'saving' }
+Notepad >> saveAs [
+	"Ask for a destination file, then save there. Does nothing when
+	the dialog is cancelled."
+	| chosen |
+	chosen := self requestSaveFileReference.
+	chosen ifNil: [ ^ nil ].
+	^ self saveTo: chosen
+]
+
+{ #category : 'saving' }
 Notepad >> saveTo: aFileReference [
 	aFileReference writeStreamDo: [ :stream | stream nextPutAll: text ].
 	file := aFileReference.
+	self updateTitle.
 	^ aFileReference
 ]
 
@@ -88,6 +114,11 @@ Notepad >> text: aString [
 
 { #category : 'views' }
 Notepad >> textAccepted [
-	text := editor text.
-	file ifNotNil: [ self save ]
+	editor ifNotNil: [ text := editor text ].
+	file ifNotNil: [ self save ] ifNil: [ self saveAs ]
+]
+
+{ #category : 'views' }
+Notepad >> updateTitle [
+	window ifNotNil: [ window setLabel: self labelString ]
 ]

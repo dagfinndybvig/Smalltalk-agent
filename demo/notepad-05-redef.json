@@ -1,0 +1,1 @@
+{"code": "Object << #Notepad\n\tslots: { #text. #file. #editor. #window. };\n\tpackage: 'Notepad';\n\tinstall.\n#notepadRedefined"}

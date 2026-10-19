@@ -178,6 +178,25 @@ def main():
     print(f"   GET /run-class-test?class_name=NotepadTest")
     print(f"   -> {json.dumps(green6, ensure_ascii=False)}")
 
+    print("\n== Add the Notepad save feature: Ctrl+S saves, first save opens a file dialog")
+    print(f"   POST /eval/  <- demo/notepad-04-save-tests.json")
+    r = post_eval(args.port, "notepad-04-save-tests.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+    print("\n== Run Notepad tests BEFORE the save feature (expect RED, 3 errors)")
+    red7 = run_class_test(args.port, "NotepadTest")
+    print(f"   GET /run-class-test?class_name=NotepadTest")
+    print(f"   -> {json.dumps(red7, ensure_ascii=False)}")
+    print(f"   POST /eval/  <- demo/notepad-05-redef.json")
+    r = post_eval(args.port, "notepad-05-redef.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+    print(f"   POST /eval/  <- demo/notepad-05-save-impl.json")
+    r = post_eval(args.port, "notepad-05-save-impl.json")
+    print(f"   -> {json.dumps(r, ensure_ascii=False)}")
+    print("\n== Run Notepad tests (expect GREEN, 9 ran)")
+    green7 = run_class_test(args.port, "NotepadTest")
+    print(f"   GET /run-class-test?class_name=NotepadTest")
+    print(f"   -> {json.dumps(green7, ensure_ascii=False)}")
+
     print("\n== Build the inside-out agent (AgentSession) - inert without MISTRAL_API_KEY")
     for payload_file in (
         "agent-00-create.json",
