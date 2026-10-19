@@ -176,6 +176,14 @@ variant: LLM tool calls executed as native Smalltalk messages.
 The user may run the Pharo desktop via `start-pharo-desktop.cmd`
 (Pharo.exe on the same image). In GUI mode:
 
+- Starting the desktop from an agent session: `cmd /c
+  start-pharo-desktop.cmd` under a process manager can open an
+  interactive cmd prompt instead of executing the script, and relative
+  executable paths fail with exit 127 even when cwd is set. Launch the
+  VM directly with FULLY ABSOLUTE paths —
+  `<project dir>\pharo-vm\Pharo.exe <project dir>\Pharo.image` —
+  which is all the .cmd does (the .cmd itself stays portable via
+  `%~dp0`). Double-clicking the .cmd still works for humans.
 - SIS still serves :8086 — health checks and evals work as usual; do
   NOT start a second VM (headless or GUI) while one is running.
 - Window geometry persists in the image: the desktop window is
