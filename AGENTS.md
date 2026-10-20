@@ -40,6 +40,16 @@ curl -sS -X POST http://localhost:8086/eval/ -H "Content-Type: application/json"
   `restart-server.cmd` wraps this for humans (health check, detached
   start, two-VM guard) — if you use it, run it detached/background too,
   because it polls until the server is up.
+- **Starting the server from an agent session:** the `pharo` launcher is a
+  bash script, and the VM may refuse to start under a generic process
+  manager (observed: exit 127 even when `PharoConsole.exe` was invoked by
+  absolute path). The reliable pattern is nohup from Git Bash:
+  `nohup ./pharo --headless Pharo.image st keepalive.st > sis.log 2>&1 &`.
+  Expect the launching command itself to time out — the shell waits on the
+  child's output handles; the VM survives and the health check comes up
+  within ~30s. Treat the timeout as success and poll the health endpoint.
+  `sis.log` is held open by the VM while it runs; it is an untracked
+  artifact — ignore or delete it only after the VM exits.
 - Never launch the GUI (`pharo-ui`) from an agent session.
 - **Before telling the user to relaunch the desktop, STOP the headless
   server.** A desktop started while a headless VM still holds the image is
@@ -88,6 +98,14 @@ differs from the example in the upstream API.md, which is misleading.
 When an endpoint 500s on a missing param, read the handler source live:
 `GET /get-method-source?class_name=SisServer&method_name=handleX:` —
 the image is the authority, not the docs.
+
+Tonel drift audit: to check whether `src/` matches the image, export each
+package to a temp dir and `diff -r` it against `src/`. Category tags drift
+cosmetically (`as yet unclassified` in an old export vs the real category
+in the image); a re-export to `src/` syncs them. The SIS server packages
+(`Sis-Core`, `Sis-Tests`, `Sis-DummyTests`,
+`BaselineOfPharoSmalltalkInteropServer`) are deliberately NOT exported to
+`src/` — they live in the image and are reinstallable from upstream.
 | `GET /run-package-test?package_name=X` / `run-class-test` | Tests |
 | `GET /install-project` | Metacello install |
 
@@ -130,6 +148,11 @@ the image is the authority, not the docs.
    replay installs the patch (`demo/hardening-01-ssl.json`). Snapshots
    saved before the patch can still die this way; restoring them and
    immediately re-running the replay's hardening step fixes them.
+   Note: `THERE_BE_DRAGONS_HERE` in `PharoDebug.log` is a generic
+   unhandled-error marker, not proof of the SSL crash — read the line
+   after each marker to classify (stale DNU traces from killed debug
+   forks are harmless and accumulate; the fatal signature is
+   `primitive #primitiveSSLDestroy:`).
 
 7. **`RPackageOrganizer` is not a global in Pharo 13** — an eval naming it
    fails to compile with "Undeclared variable". Reach the package organizer
@@ -260,6 +283,10 @@ The user may run the Pharo desktop via `start-pharo-desktop.cmd`
    operations (package loads, bulk refactoring, anything destructive),
    run `snapshot.cmd` (whole-world backup of the image); restore with
    `restore.cmd snapshots\<timestamp>` while the image is stopped.
+- Snapshots are point-in-time copies: before relying on one, compare the
+   newest entry in `snapshots/` with `Pharo.image`'s file mtime (Pharo 13
+   has no `lastImageSaveTime`; the mtime is the save-time proxy) — an
+   image saved after the newest snapshot has changes the backup lacks.
 - Do not commit `Pharo.image` / `Pharo.changes` / `PharoDebug.log` to
   version control (`.gitignore` already excludes them).
 - Prefer small, idempotent evals over large scripts.
