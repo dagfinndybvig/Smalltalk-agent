@@ -42,6 +42,16 @@ BoingBallTest >> testCornersAreTransparent [
 ]
 
 { #category : 'as yet unclassified' }
+BoingBallTest >> testFacetedRenderIsDeterministicAndDiffers [
+	| a b s |
+	a := BoingBall renderFacetedBallRadius: 16 phase: 0.3.
+	b := BoingBall renderFacetedBallRadius: 16 phase: 0.3.
+	s := BoingBall renderBallRadius: 16 phase: 0.3.
+	self assert: a bits = b bits.
+	self deny: a bits = s bits.
+]
+
+{ #category : 'as yet unclassified' }
 BoingBallTest >> testFormCacheReturnsSameInstance [
 	| a b |
 	a := BoingBall formRadius: 12 phase: 3.

@@ -19,13 +19,22 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
+BoingBall class >> flushFormCache [
+	"Drop all cached rotation forms; the next tick re-renders them."
+	FormCache := Dictionary new.
+	^ #flushed
+]
+
+{ #category : 'as yet unclassified' }
 BoingBall class >> formRadius: r phase: p [
 	"Answer a cached rendered form for this radius and phase index
-	(0-23); render lazily on first request."
+	(0-23); render lazily on first request. Currently serves the
+	faceted variant; recompile to call renderBallRadius:phase: for the
+	smooth one."
 	FormCache ifNil: [ FormCache := Dictionary new ].
 	^ FormCache
 		at: { r. p }
-		ifAbsentPut: [ self renderBallRadius: r phase: p * (Float pi * 2.0 / 24.0) ]
+		ifAbsentPut: [ self renderFacetedBallRadius: r phase: p * (Float pi * 2.0 / 24.0) ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -58,6 +67,45 @@ BoingBall class >> renderBallRadius: r phase: phaseRadians [
 					j := (lat * invBand) floor.
 					raw := 0.55 + (0.45 * ((u * -0.35) + (v * -0.5) + (z * 0.79))).
 					shade := (raw max: 0.0) min: 1.0.
+					(i + j) even
+						ifTrue: [ base := Color red ]
+						ifFalse: [ base := Color white ].
+					form
+						colorAt: x @ y
+						put: (Color r: base red * shade g: base green * shade b: base blue * shade) ] ] ].
+	^ form
+]
+
+{ #category : 'as yet unclassified' }
+BoingBall class >> renderFacetedBallRadius: r phase: phaseRadians [
+	"Faceted variant of the boing ball: each checker panel is
+	flat-shaded from the surface normal at its center, so the ball
+	reads as a geodesic built from flat panels instead of a smooth
+	shaded sphere. Same layout and colors as the smooth renderer."
+	| form half invBand |
+	half := r asFloat.
+	invBand := 4.0 / Float pi.
+	form := Form extent: (2 * r) @ (2 * r) depth: 32.
+	0 to: 2 * r - 1 do: [ :y |
+		0 to: 2 * r - 1 do: [ :x |
+			| u v d z lon lat i j lonC latC un vn zn raw shade base |
+			u := (x - half) / half.
+			v := (y - half) / half.
+			d := (u * u) + (v * v).
+			d <= 1.0
+				ifTrue: [
+					z := (1.0 - d) sqrt.
+					lon := (u / (z max: 1.0e-9)) arcTan.
+					lat := v arcSin.
+					i := ((lon + phaseRadians) * invBand) floor.
+					j := (lat * invBand) floor.
+					lonC := (i + 0.5) / invBand - phaseRadians.
+					latC := (j + 0.5) / invBand.
+					un := lonC sin * latC cos.
+					vn := latC sin.
+					zn := lonC cos * latC cos.
+					raw := 0.55 + (0.45 * ((un * -0.35) + (vn * -0.5) + (zn * 0.79))).
+					shade := (raw max: 0.3) min: 1.0.
 					(i + j) even
 						ifTrue: [ base := Color red ]
 						ifFalse: [ base := Color white ].
