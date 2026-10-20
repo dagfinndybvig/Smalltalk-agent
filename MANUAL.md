@@ -239,17 +239,56 @@ This is the part of Smalltalk that surprises people:
 
 Because of that, there are two safety nets:
 
-1. **`src/` folder** — plain-text copies of all demo code (Tonel
-   format). To reload them into a fresh image:
+1. **`src/` folder** — plain-text copies of all developed code (Tonel
+   format), one folder per package. This is the full inventory:
+
+   | Package | What it is |
+   |---|---|
+   | `GameOfLife` + `GameOfLife-Tests` | Conway's Life, the agent-built MVP |
+   | `Fractals` + `Fractals-Tests` | The fractal gallery (Sierpinski carpet, dragon, twindragon) |
+   | `Notepad` + `Notepad-Tests` | The writing window with working Windows Ctrl+S |
+   | `BoingBall` + `BoingBall-Tests` | The bouncing balls and their boing sounds |
+   | `AgentTerminal` | The in-image agent (`AgentSession`) |
+
+   **Importing into a running image, no replay needed** — one line per
+   package (the server must be up; `path` is the *folder containing*
+   the package, not the package itself — the name comes from
+   `package_name`):
+
    ```bash
    curl "http://localhost:8086/import-package?package_name=GameOfLife&path=<this-folder>/src"
    curl "http://localhost:8086/import-package?package_name=GameOfLife-Tests&path=<this-folder>/src"
-   curl "http://localhost:8086/import-package?package_name=AgentTerminal&path=<this-folder>/src"
-   curl "http://localhost:8086/import-package?package_name=BoingBall&path=<this-folder>/src"
-   curl "http://localhost:8086/import-package?package_name=BoingBall-Tests&path=<this-folder>/src"
    ```
-   (note: `path` is the *folder*, not the package; the name comes from
-   `package_name`)
+
+   Or all of them in one loop from Git Bash:
+
+   ```bash
+   for p in AgentTerminal BoingBall BoingBall-Tests Fractals Fractals-Tests \
+            GameOfLife GameOfLife-Tests Notepad Notepad-Tests; do
+     curl "http://localhost:8086/import-package?package_name=$p&path=$(pwd)/src"
+   done
+   ```
+
+   To see what the image currently has loaded:
+
+   ```bash
+   curl "http://localhost:8086/list-packages"
+   ```
+
+   **Exporting works the same way** — if you (or an agent) developed
+   something live and want it in git, export it out of the image,
+   then save the image:
+
+   ```bash
+   curl "http://localhost:8086/export-package?package_name=MyPackage&path=<this-folder>/src"
+   curl -X POST http://localhost:8086/eval/ -H "Content-Type: application/json" \
+     -d "{\"code\":\"Smalltalk snapshot: true andQuit: false\"}"
+   ```
+
+   The exported `.class.st` files land in `src/<package>/` as normal
+   files you can commit. Import is the same operation in reverse —
+   which is why a fresh image plus `src/` equals everything this
+   repository's code, without running the replay demo.
 2. **`snapshot.cmd`** — copies the entire image state to
    `snapshots\Pharo-<timestamp>.*`. Restore with
    `restore.cmd snapshots\Pharo-<timestamp>` (image must be stopped
