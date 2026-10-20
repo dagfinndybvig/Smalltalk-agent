@@ -10,9 +10,9 @@ Class {
 		'radius',
 		'phase'
 	],
-	#classVars : [
-		'Current',
-		'FormCache'
+	#classInstVars : [
+		'current',
+		'formCache'
 	],
 	#category : 'BoingBall',
 	#package : 'BoingBall'
@@ -21,31 +21,39 @@ Class {
 { #category : 'as yet unclassified' }
 BoingBall class >> flushFormCache [
 	"Drop all cached rotation forms; the next tick re-renders them."
-	FormCache := Dictionary new.
+	formCache := Dictionary new.
 	^ #flushed
 ]
 
 { #category : 'as yet unclassified' }
 BoingBall class >> formRadius: r phase: p [
 	"Answer a cached rendered form for this radius and phase index
-	(0-23); render lazily on first request."
-	FormCache ifNil: [ FormCache := Dictionary new ].
-	^ FormCache
+	(0-23); render lazily on first request. The cache lives on the
+	concrete class, so theme variants keep independent forms."
+	formCache ifNil: [ formCache := Dictionary new ].
+	^ formCache
 		at: { r. p }
 		ifAbsentPut: [ self renderBallRadius: r phase: p * (Float pi * 2.0 / 24.0) ]
 ]
 
 { #category : 'as yet unclassified' }
 BoingBall class >> isRunning [
-	^ Current notNil
+	^ current notNil
+]
+
+{ #category : 'as yet unclassified' }
+BoingBall class >> primaryColor [
+	"The check color paired with the secondary color."
+	^ Color red
 ]
 
 { #category : 'as yet unclassified' }
 BoingBall class >> renderBallRadius: r phase: phaseRadians [
-	"Render one rotation phase of the classic red-and-white checkered
-	boing ball: a unit sphere lit from the upper left, 8 longitude and
-	8 latitude bands, the phase shifts the longitude seam. Pixels
-	outside the disc stay transparent."
+	"Render one rotation phase of the checkered boing ball: a unit
+	sphere lit from the upper left, 8 longitude and 8 latitude bands,
+	the phase shifts the longitude seam. The two check colors come
+	from primaryColor/secondaryColor, so theme variants just override
+	those. Pixels outside the disc stay transparent."
 	| form half invBand |
 	half := r asFloat.
 	invBand := 4.0 / Float pi.
@@ -66,8 +74,8 @@ BoingBall class >> renderBallRadius: r phase: phaseRadians [
 					raw := 0.55 + (0.45 * ((u * -0.35) + (v * -0.5) + (z * 0.79))).
 					shade := (raw max: 0.0) min: 1.0.
 					(i + j) even
-						ifTrue: [ base := Color red ]
-						ifFalse: [ base := Color white ].
+						ifTrue: [ base := self primaryColor ]
+						ifFalse: [ base := self secondaryColor ].
 					form
 						colorAt: x @ y
 						put: (Color r: base red * shade g: base green * shade b: base blue * shade) ] ] ].
@@ -75,18 +83,23 @@ BoingBall class >> renderBallRadius: r phase: phaseRadians [
 ]
 
 { #category : 'as yet unclassified' }
+BoingBall class >> secondaryColor [
+	^ Color white
+]
+
+{ #category : 'as yet unclassified' }
 BoingBall class >> start [
-	"Stop any running ball and open a fresh one bouncing across the
-	desktop. Answers #boing."
+	"Stop any running ball of this variant and open a fresh one
+	bouncing across the desktop. Answers #boing."
 	self stop.
-	Current := self new start.
+	current := self new start.
 	^ #boing
 ]
 
 { #category : 'as yet unclassified' }
 BoingBall class >> stop [
-	"Stop the running ball, if any. Answers #stopped."
-	Current ifNotNil: [ Current stop. Current := nil ].
+	"Stop the running ball of this variant, if any. Answers #stopped."
+	current ifNotNil: [ current stop. current := nil ].
 	^ #stopped
 ]
 
