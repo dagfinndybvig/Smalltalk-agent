@@ -73,3 +73,13 @@ BlueBoingBallTest >> testRenderIsDeterministic [
 	b := BlueBoingBall renderBallRadius: 16 phase: 0.3.
 	self assert: a bits = b bits.
 ]
+
+{ #category : 'as yet unclassified' }
+BlueBoingBallTest >> testStartsOppositeRedBall [
+	| e |
+	e := 1200 @ 900.
+	self assert: (BlueBoingBall startPosition: e) x > (BoingBall startPosition: e) x.
+	self assert: (BlueBoingBall startPosition: e) y > (BoingBall startPosition: e) y.
+	self assert: BlueBoingBall startVelocity x < 0.
+	self assert: BoingBall startVelocity x > 0.
+]

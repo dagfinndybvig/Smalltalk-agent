@@ -97,6 +97,20 @@ BoingBall class >> start [
 ]
 
 { #category : 'as yet unclassified' }
+BoingBall class >> startPosition: extent [
+	"Initial ball center for a world of this extent. Variants override
+	to enter from their own corner."
+	^ (extent x / 3.0) @ (extent y / 4.0)
+]
+
+{ #category : 'as yet unclassified' }
+BoingBall class >> startVelocity [
+	"Initial velocity; positive x moves right. Variants override to
+	mirror the entry direction."
+	^ 2 @ 1.4
+]
+
+{ #category : 'as yet unclassified' }
 BoingBall class >> stop [
 	"Stop the running ball of this variant, if any. Answers #stopped."
 	current ifNotNil: [ current stop. current := nil ].
@@ -106,9 +120,10 @@ BoingBall class >> stop [
 { #category : 'as yet unclassified' }
 BoingBall >> start [
 	"Open the ball on the desktop and fork the animation loop at
-	background priority so the UI process stays responsive. The
-	trajectory is the authentic Boing one: constant velocity, sharp
-	reflections off the edges, no gravity."
+	background priority so the UI process stays responsive. Entry
+	position and velocity come from the class-side startPosition:/
+	startVelocity hooks, so theme variants can enter from their own
+	corner."
 	| extent |
 	self stop.
 	extent := World extent.
@@ -122,8 +137,8 @@ BoingBall >> start [
 		lock.
 	World addMorph: shadow.
 	World addMorph: morph.
-	position := (extent x / 3.0) @ (extent y / 4.0).
-	velocity := 2 @ 1.4.
+	position := self class startPosition: extent.
+	velocity := self class startVelocity.
 	phase := 0.
 	process := [ [ true ] whileTrue: [ self step. (Delay forMilliseconds: 16) wait ] ]
 		forkAt: Processor userBackgroundPriority.
