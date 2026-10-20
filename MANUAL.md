@@ -52,7 +52,10 @@ starts. After step 3, the image also contains the GameOfLife example, the Gosper
 (see "A tour of the demo" below).
 
 If someone already built the image and you just cloned this repository:
-run step 1, then step 3 (the demo rebuilds and loads everything else).
+run step 1, then step 3 (the demo rebuilds and loads everything except
+the boing balls). Or skip the demo entirely and import the code from
+`src/` — see "Saving, and not losing work" below; that is faster and
+covers every package.
 
 ## Daily use: two ways to start the image
 

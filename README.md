@@ -275,16 +275,33 @@ curl -sS -L https://get.pharo.org/64/stable+vm | sh
 The MCP server needs no install at all — it is fetched on demand by
 `uvx` (requires Python 3.10+ and [uv](https://docs.astral.sh/uv/)).
 
-To restore previously developed code into a fresh image, import the
-Tonel sources from `src/` (`path` is the *parent* directory; the package
-is selected by `package_name` — the upstream API.md example is
-misleading about this):
+## Restoring code into a fresh image: two ways
 
-```
-GET /import-package?package_name=GameOfLife&path=<repo>/src
+**The simple way - import the packages.** `src/` holds every package
+this repository developed, as plain Tonel. One request per package
+(`path` is the *parent* directory; the package is selected by
+`package_name` - the upstream API.md example is misleading about
+this):
+
+```bash
+for p in AgentTerminal BoingBall BoingBall-Tests Fractals Fractals-Tests \
+         GameOfLife GameOfLife-Tests Notepad Notepad-Tests; do
+  curl "http://localhost:8086/import-package?package_name=$p&path=$(pwd)/src"
+done
 ```
 
-(or re-run `demo/replay_demo.py`, which rebuilds everything live).
+That is the whole restore: a fresh image plus `src/` equals everything
+here. Save the image afterwards
+(`Smalltalk snapshot: true andQuit: false`) if you want it to stick.
+MANUAL.md has the same instructions with a package-by-package table.
+
+**The narrative way - the replay demo.** `demo/replay_demo.py` is not
+the restore path; it is a demonstration of the agent workflow: it
+replays the original evals test-first so you watch classes fail into
+existence, red to green. It covers every demo package *except*
+BoingBall (payload capture is on the roadmap in TODO.md), and it is
+slower than importing. Use the import if you just want the code; use
+the replay if you want the show.
 
 ## The other direction: an agent inside the image
 
