@@ -112,13 +112,15 @@ BoingBall >> start [
 
 { #category : 'as yet unclassified' }
 BoingBall >> step [
-	"Advance one tick at constant velocity and reflect off the floor,
-	walls and ceiling - the angular billiard path of the 1984 demo.
+	"Advance one tick and reflect off the floor, walls and ceiling.
+	The trajectory is a blend: mostly straight diagonals with a small
+	gravity term (0.08) drooping each segment into the floor bounce.
 	The shadow sits on the floor line under the ball, wider and darker
 	as the ball gets closer to the floor. The spin advances one
 	quarter-step per tick to match the slow flight."
 	| extent floorY leftX rightX h shadowWidth |
 	extent := World extent.
+	velocity := velocity x @ (velocity y + 0.08).
 	position := position + velocity.
 	floorY := extent y - radius - 2.
 	leftX := radius.
