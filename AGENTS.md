@@ -50,6 +50,18 @@ curl -sS -X POST http://localhost:8086/eval/ -H "Content-Type: application/json"
   within ~30s. Treat the timeout as success and poll the health endpoint.
   `sis.log` is held open by the VM while it runs; it is an untracked
   artifact — ignore or delete it only after the VM exits.
+- **A server started for a temporary purpose (audit, test run, export,
+  one-off evals) must be STOPPED when that purpose is done** —
+  `taskkill //F //PID <pid>` from Git Bash (single slashes get mangled
+  into paths). Leaving it running hands the user the forbidden two-VM
+  state: the next desktop launch shows "Pharo cannot write to the
+  changes file" and its SIS cannot bind. If you notice a `Pharo.exe`
+  desktop process has appeared while your headless server is up, kill
+  the headless `PharoConsole.exe` immediately and verify the desktop's
+  bridge took over port 8086 (eval + `/read-screen` with sane bounds).
+  Exception: a server started as shared infrastructure for an ongoing
+  session should keep running — but it is then YOUR job to stop it
+  before the user switches to desktop mode.
 - Never launch the GUI (`pharo-ui`) from an agent session.
 - **Before telling the user to relaunch the desktop, STOP the headless
   server.** A desktop started while a headless VM still holds the image is
