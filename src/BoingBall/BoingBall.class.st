@@ -19,6 +19,12 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
+BoingBall class >> bouncePitch [
+	"Base frequency of this variant boing, in Hz."
+	^ 180
+]
+
+{ #category : 'as yet unclassified' }
 BoingBall class >> flushFormCache [
 	"Drop all cached rotation forms; the next tick re-renders them."
 	formCache := Dictionary new.
@@ -39,6 +45,12 @@ BoingBall class >> formRadius: r phase: p [
 { #category : 'as yet unclassified' }
 BoingBall class >> isRunning [
 	^ current notNil
+]
+
+{ #category : 'as yet unclassified' }
+BoingBall class >> playBounce [
+	"Play this variant boing without blocking."
+	BoingSound play: (BoingSound bounceWavFrequency: self bouncePitch)
 ]
 
 { #category : 'as yet unclassified' }
@@ -152,9 +164,11 @@ BoingBall >> step [
 	gravity term (0.08) drooping each segment into the floor bounce.
 	The shadow sits on the floor line under the ball, wider and darker
 	as the ball gets closer to the floor. The spin advances one
-	quarter-step per tick to match the slow flight."
-	| extent floorY leftX rightX h shadowWidth |
+	quarter-step per tick to match the slow flight. Each reflection
+	plays this variant pitch boing."
+	| extent floorY leftX rightX h shadowWidth bounced |
 	extent := World extent.
+	bounced := false.
 	velocity := velocity x @ (velocity y + 0.08).
 	position := position + velocity.
 	floorY := extent y - radius - 2.
@@ -163,19 +177,23 @@ BoingBall >> step [
 	position y > floorY
 		ifTrue: [
 			position := position x @ (2 * floorY - position y).
-			velocity := velocity x @ velocity y abs negated ].
+			velocity := velocity x @ velocity y abs negated.
+			bounced := true ].
 	position y < radius
 		ifTrue: [
 			position := position x @ (2 * radius - position y).
-			velocity := velocity x @ velocity y abs ].
+			velocity := velocity x @ velocity y abs.
+			bounced := true ].
 	position x < leftX
 		ifTrue: [
 			position := (2 * leftX - position x) @ position y.
-			velocity := velocity x abs @ velocity y ].
+			velocity := velocity x abs @ velocity y.
+			bounced := true ].
 	position x > rightX
 		ifTrue: [
 			position := (2 * rightX - position x) @ position y.
-			velocity := velocity x abs negated @ velocity y ].
+			velocity := velocity x abs negated @ velocity y.
+			bounced := true ].
 	phase := (phase + 1) \\ 96.
 	morph form: (self class formRadius: radius phase: (phase / 4) floor).
 	morph position: position - (radius @ radius).
@@ -186,6 +204,7 @@ BoingBall >> step [
 		bounds: ((position x - (shadowWidth / 2)) @ (floorY + radius - 6)
 			extent: shadowWidth @ ((shadowWidth / 4) rounded max: 4));
 		color: (Color black alpha: (0.35 * (1.0 - h))).
+	bounced ifTrue: [ self class playBounce ]
 ]
 
 { #category : 'as yet unclassified' }

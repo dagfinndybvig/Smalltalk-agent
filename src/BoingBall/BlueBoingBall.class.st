@@ -6,6 +6,12 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
+BlueBoingBall class >> bouncePitch [
+	"A fourth and a bit above the red ball."
+	^ 260
+]
+
+{ #category : 'as yet unclassified' }
 BlueBoingBall class >> primaryColor [
 	"Blue-theme variant of the classic boing ball."
 	^ Color blue
