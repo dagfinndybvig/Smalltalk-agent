@@ -57,7 +57,9 @@ curl -sS -X POST http://localhost:8086/eval/ -H "Content-Type: application/json"
   headless VM keeps port 8086 (SIS binds at boot; the desktop's SIS just
   fails to bind), so every eval lands in a world nobody is looking at.
   Symptoms: evals succeed but the user sees no change, read-screen shows a
-  degenerate world (e.g. 240x120 with windows overflowing it). Recovery:
+  degenerate world (e.g. 240x120 with windows overflowing it), or the
+  desktop pops "Pharo cannot write to the changes file" at boot (the
+  headless VM holds the .changes write lock). Recovery:
   kill `PharoConsole.exe`, have the user relaunch the desktop, then
   verify the bridge reaches the real world (`/read-screen` bounds should
   match the actual screen before trusting any GUI-visible change).
