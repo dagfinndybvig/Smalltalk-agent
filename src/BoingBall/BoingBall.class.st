@@ -86,7 +86,9 @@ BoingBall class >> stop [
 { #category : 'as yet unclassified' }
 BoingBall >> start [
 	"Open the ball on the desktop and fork the animation loop at
-	background priority so the UI process stays responsive."
+	background priority so the UI process stays responsive. The
+	trajectory is the authentic Boing one: constant velocity, sharp
+	reflections off the edges, no gravity."
 	| extent |
 	self stop.
 	extent := World extent.
@@ -101,7 +103,7 @@ BoingBall >> start [
 	World addMorph: shadow.
 	World addMorph: morph.
 	position := (extent x / 3.0) @ (extent y / 4.0).
-	velocity := 2 @ -14.
+	velocity := 2 @ 1.4.
 	phase := 0.
 	process := [ [ true ] whileTrue: [ self step. (Delay forMilliseconds: 16) wait ] ]
 		forkAt: Processor userBackgroundPriority.
@@ -110,14 +112,13 @@ BoingBall >> start [
 
 { #category : 'as yet unclassified' }
 BoingBall >> step [
-	"Advance the physics one tick, rotate the ball, and update the
-	morphs: the ball bounces off the floor, walls and ceiling with
-	restitution 1.0, the shadow sits on the floor line under the ball,
-	wider and darker as the ball gets closer to the floor. The spin
-	advances one quarter-step per tick to match the slow flight."
+	"Advance one tick at constant velocity and reflect off the floor,
+	walls and ceiling - the angular billiard path of the 1984 demo.
+	The shadow sits on the floor line under the ball, wider and darker
+	as the ball gets closer to the floor. The spin advances one
+	quarter-step per tick to match the slow flight."
 	| extent floorY leftX rightX h shadowWidth |
 	extent := World extent.
-	velocity := velocity x @ (velocity y + 0.25).
 	position := position + velocity.
 	floorY := extent y - radius - 2.
 	leftX := radius.
