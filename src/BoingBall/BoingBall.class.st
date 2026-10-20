@@ -101,7 +101,7 @@ BoingBall >> start [
 	World addMorph: shadow.
 	World addMorph: morph.
 	position := (extent x / 3.0) @ (extent y / 4.0).
-	velocity := 3 @ -17.
+	velocity := 2 @ -14.
 	phase := 0.
 	process := [ [ true ] whileTrue: [ self step. (Delay forMilliseconds: 16) wait ] ]
 		forkAt: Processor userBackgroundPriority.
@@ -114,10 +114,10 @@ BoingBall >> step [
 	morphs: the ball bounces off the floor, walls and ceiling with
 	restitution 1.0, the shadow sits on the floor line under the ball,
 	wider and darker as the ball gets closer to the floor. The spin
-	advances every other tick so it matches the slower flight."
+	advances one quarter-step per tick to match the slow flight."
 	| extent floorY leftX rightX h shadowWidth |
 	extent := World extent.
-	velocity := velocity x @ (velocity y + 0.35).
+	velocity := velocity x @ (velocity y + 0.25).
 	position := position + velocity.
 	floorY := extent y - radius - 2.
 	leftX := radius.
@@ -138,8 +138,8 @@ BoingBall >> step [
 		ifTrue: [
 			position := (2 * rightX - position x) @ position y.
 			velocity := velocity x abs negated @ velocity y ].
-	phase := (phase + 1) \\ 48.
-	morph form: (self class formRadius: radius phase: (phase / 2) floor).
+	phase := (phase + 1) \\ 96.
+	morph form: (self class formRadius: radius phase: (phase / 4) floor).
 	morph position: position - (radius @ radius).
 	h := ((floorY - position y) / (extent y * 0.75)) max: 0.0.
 	h := h min: 1.0.
