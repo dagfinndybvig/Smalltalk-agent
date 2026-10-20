@@ -8,7 +8,8 @@ Class {
 		'position',
 		'velocity',
 		'radius',
-		'phase'
+		'phase',
+		'lastBoing'
 	],
 	#classInstVars : [
 		'current',
@@ -165,7 +166,8 @@ BoingBall >> step [
 	The shadow sits on the floor line under the ball, wider and darker
 	as the ball gets closer to the floor. The spin advances one
 	quarter-step per tick to match the slow flight. Each reflection
-	plays this variant pitch boing."
+	plays this variant pitch boing, but at most one boing per 350 ms
+	per ball, so a ball skimming the floor does not rattle."
 	| extent floorY leftX rightX h shadowWidth bounced |
 	extent := World extent.
 	bounced := false.
@@ -204,7 +206,11 @@ BoingBall >> step [
 		bounds: ((position x - (shadowWidth / 2)) @ (floorY + radius - 6)
 			extent: shadowWidth @ ((shadowWidth / 4) rounded max: 4));
 		color: (Color black alpha: (0.35 * (1.0 - h))).
-	bounced ifTrue: [ self class playBounce ]
+	bounced ifTrue: [
+		(lastBoing isNil or: [ (Time millisecondClockValue - lastBoing) abs > 350 ])
+			ifTrue: [
+				lastBoing := Time millisecondClockValue.
+				self class playBounce ] ]
 ]
 
 { #category : 'as yet unclassified' }

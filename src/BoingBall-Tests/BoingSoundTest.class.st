@@ -6,6 +6,15 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
+BoingSoundTest >> testDebounceSkipsRapidPlays [
+	BoingSound resetDebounce.
+	[ self assert: (BoingSound allowsPlayAtMsClock: 1000000 minimumInterval: 150).
+	self deny: (BoingSound allowsPlayAtMsClock: 1000100 minimumInterval: 150).
+	self assert: (BoingSound allowsPlayAtMsClock: 1000200 minimumInterval: 150) ]
+		ensure: [ BoingSound resetDebounce ]
+]
+
+{ #category : 'as yet unclassified' }
 BoingSoundTest >> testNotSilent [
 	| wav |
 	wav := BoingSound bounceWavFrequency: 180.
@@ -22,7 +31,9 @@ BoingSoundTest >> testPitchesDiffer [
 
 { #category : 'as yet unclassified' }
 BoingSoundTest >> testPlaySoundReturnsTrue [
-	self assert: (BoingSound play: (BoingSound bounceWavFrequency: 180)) = 1
+	"minimumInterval: 0 skips the debounce, so live bouncing balls
+	cannot race this into a silent skip."
+	self assert: (BoingSound play: (BoingSound bounceWavFrequency: 180) minimumInterval: 0) = 1
 ]
 
 { #category : 'as yet unclassified' }
