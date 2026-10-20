@@ -153,6 +153,26 @@ GameOfLife pufferTrain openPufferView
 ```
 
 ```smalltalk
+"The classic Amiga boing ball: a checkered sphere bouncing across
+ your desktop, with a boing sound on every bounce. Turn your sound on."
+BoingBall start
+```
+
+```smalltalk
+"Variant balls, each with its own color, pitch and entry corner.
+ All three can fly at once - try them together."
+BlueBoingBall start.
+GreenBoingBall start
+```
+
+```smalltalk
+"Stop them (one variant at a time):"
+BoingBall stop.
+BlueBoingBall stop.
+GreenBoingBall stop
+```
+
+```smalltalk
 "Notepad: a plain writing window (wrapped text). Type, then Ctrl+S:
 with no file yet, a save-as dialog opens; afterwards Ctrl+S writes
 silently and the title bar shows the file. (On Windows this needs
@@ -225,6 +245,8 @@ Because of that, there are two safety nets:
    curl "http://localhost:8086/import-package?package_name=GameOfLife&path=<this-folder>/src"
    curl "http://localhost:8086/import-package?package_name=GameOfLife-Tests&path=<this-folder>/src"
    curl "http://localhost:8086/import-package?package_name=AgentTerminal&path=<this-folder>/src"
+   curl "http://localhost:8086/import-package?package_name=BoingBall&path=<this-folder>/src"
+   curl "http://localhost:8086/import-package?package_name=BoingBall-Tests&path=<this-folder>/src"
    ```
    (note: `path` is the *folder*, not the package; the name comes from
    `package_name`)

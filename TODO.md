@@ -36,6 +36,15 @@ Items are roughly ordered; see README.md for the architecture.
       lossy); method and lessons documented in DESKTOP.md; the
       specific branded desktop stays private
 
+- [x] BoingBall: the classic Amiga boing ball demo as a live desktop
+      toy - pixel-rendered rotating sphere, per-class state via class
+      instance variables so three variants (red/blue/green) fly
+      simultaneously with distinct entry corners and bounce pitches,
+      in-image WAV synthesis played through winmm PlaySound via
+      ThreadedFFI, per-ball and global bounce debounce against rattle;
+      built live on the user's desktop (30/30 tests), including live
+      slot additions and method recompiles with the balls animating
+
 ## Near term — harden the PoC
 
 - [x] Verify the `smalltalk-interop` MCP tools appear in a fresh Vibe session
@@ -97,6 +106,11 @@ Repo: https://github.com/dagfinndybvig/Smalltalk-agent
       (Spec presenter screenshot capture still untested)
 - [ ] Evaluate mumez/pharo-agentic-browser as a full workspace UI / whether
       to stay with plain MCP tools
+- [ ] BoingBall replay payloads (`demo/boingball-*.json`) so
+      `demo/replay_demo.py` builds the balls into fresh images like the
+      other demos
+- [ ] BoingBall audio polish: volume by impact speed, a soft pass-by tick,
+      polyphony via `waveOut` instead of mono `PlaySound`
 
 ## Long term — the "Reverse" direction
 

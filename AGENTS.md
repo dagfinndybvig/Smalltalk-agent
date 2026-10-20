@@ -93,6 +93,12 @@ For any eval payload containing Smalltalk quotes, **write the JSON body to a
 temporary file and use `curl --data-binary @file`**. Inline shell quoting is
 brittle on Windows and has already caused two spurious failures here.
 
+Quote-escaping nuance: the doubled-quote convention (`''x''` inside a
+string) applies ONLY to method source inside a `compile:` argument. In
+a direct eval, string literals take normal single quotes (`'x'`) — a
+leading `''` in eval code parses as an empty string followed by
+garbage and fails with an unrelated-looking parse error.
+
 Key endpoints (all return JSON with `success`, and on failure a structured
 `error` with `description`, `stack_trace`, and `receiver` including its
 instance variables — read these, they are the debugger):
@@ -201,6 +207,31 @@ in the image); a re-export to `src/` syncs them. The SIS server packages
    `focusMorph kmDispatcher dispatchKeystroke: evt` — expect the SpDialog
    to open MODALLY and block the calling process.
 
+9. **FFI callouts run in strict mode.** A function spec like
+   `#(int PlaySound(void *sound, void * 0, int 5))` resolves named
+   arguments from the **method's arguments only** — never from
+   temporaries, and never from a DoIt (the FFI loader cannot see DoIt
+   temps: `FFIVariableNameNotFound`). Probe FFI from a compiled
+   method, not an eval. Untyped literals in the spec are rejected
+   (`FFIUnsupportedUntypedLiteral`) — use typed constants
+   (`void * 0`, `int 5`). The working idiom (see
+   `BoingSoundLibrary`/`BoingSound`): subclass `FFILibrary`,
+   override `win32LibraryName` (+ unix/mac names), then call
+   `MyLib uniqueInstance ffiCall: #(ret fn(types args))` from inside
+   a normal method whose argument names match the spec.
+
+10. **Per-subclass singletons need class instance variables, not class
+    variables.** Class variables are bound into inherited methods and
+    cannot be shadowed by a subclass; use `classSlots:` in the fluid
+    class definition:
+    `Object << #Foo slots: {...}; classSlots: {#current. #cache}; package: 'P'; install`.
+    Slots are `#symbol`s — bare identifiers (`{morph}`) fail to
+    compile as undeclared variables. Redefining the slots of a live
+    class migrates running instances (Shift), and running loops pick
+    up recompiled methods on the next message send — the boing balls
+    survived live slot additions and method recompiles without a
+    restart.
+
 ## In-image agent (AgentSession)
 
 The AgentTerminal package contains AgentSession - the inside-out
@@ -232,6 +263,8 @@ variant: LLM tool calls executed as native Smalltalk messages.
 - Never run two VMs on the same image files. Before starting the server,
   check whether it is already up (health check above); another agent
   session may have started it.
+- Windows Python cannot open Git-Bash-style paths (`/c/...`); use
+  `C:/...` form when passing paths to `python` from Git Bash.
 
 ## Desktop (GUI) mode
 
@@ -314,6 +347,13 @@ The user may run the Pharo desktop via `start-pharo-desktop.cmd`
   export the affected package as Tonel to `src/` via
   `GET /export-package?package_name=X&path=<abs src path>`, save the image
   (`Smalltalk snapshot: true andQuit: false`), and commit.
+- Tests run in the live world: if live processes mutate shared state
+  (the desktop boing balls play sounds from their animation
+  processes), a test asserting on that state races them and fails
+  intermittently. Extract the decision into a pure method driven with
+  fabricated inputs, and offer an explicit bypass for round-trip
+  assertions (see `BoingSound>>allowsPlayAtMsClock:minimumInterval:`
+  and `play:minimumInterval: 0`).
 - `demo/replay_demo.py` is the reference for how a structured agent session
   against the image should look (health check -> evals -> test runs -> export).
 

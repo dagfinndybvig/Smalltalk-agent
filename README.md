@@ -200,6 +200,47 @@ test-first and cross-verified against a Python reference point for
 point, and each opens a full-screen view: `openCarpetView`,
 `openDragonView`, `openTwinDragonView`.
 
+## BoingBall: the classic Amiga demo, live on your desktop
+
+The `BoingBall` package is the 1983 Amiga boing ball demo rebuilt as
+a live Morphic animation: a checkered sphere, rendered pixel-by-pixel
+from a lit unit sphere and rotated through 24 cached phases, bouncing
+across the world with its shadow - and *boinging* on every bounce.
+It was developed live by an agent while the user watched the desktop,
+and it doubles as a live-systems architecture experiment:
+
+- **Variants are two-line subclasses.** All state is per-class (class
+  instance variables, not shared class variables), each variant
+  overrides only hooks - `primaryColor`, `startPosition:`,
+  `startVelocity`, `bouncePitch` - so three balls fly simultaneously
+  with independent form caches and processes:
+
+  ```smalltalk
+  BoingBall start.       "red,   180 Hz, enters upper-left, moving right"
+  BlueBoingBall start.   "blue,  260 Hz, enters lower-right, moving left"
+  GreenBoingBall start.  "green, 320 Hz, drops from top-center"
+  ```
+
+- **The sound is synthesized in the image.** `BoingSound` builds the
+  descending boooing - a sine sweeping down one octave with a decay
+  envelope - into an in-memory WAV and plays it through
+  `PlaySound(SND_ASYNC|SND_MEMORY)` via ThreadedFFI (`winmm.dll`).
+  No sound files, no external tooling. Per-ball and global debounces
+  keep overlapping bounces from rattling into machine-gun fire.
+
+- **It survives live surgery.** Slots were added to the running
+  class (Shift migrates live instances) and methods were recompiled
+  while the balls were animating - the loops pick up new compiled
+  methods on the next tick, no restart.
+
+- **Tests hold it together**: 30 tests cover rendering, cache
+  independence between variants, WAV format, pitch ordering, the FFI
+  round-trip, and the debounce logic (driven with fabricated clock
+  values so tests cannot race the live balls).
+
+In fresh images the balls load from `src/` (`BoingBall`,
+`BoingBall-Tests`); they are not (yet) part of the replay demo.
+
 ## Whole-world undo
 
 The live image is single mutable state. Before risky work, snapshot it:

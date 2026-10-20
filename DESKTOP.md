@@ -174,6 +174,29 @@ not just for logic; anything deterministic can be tested.
   Before pushing anything that touched private files, read the commit:
   `git show --stat HEAD` — the stat line is the last line of defense.
 
+## Beyond the wallpaper: live desktop toys
+
+The same human-watching, agent-driving loop later produced `BoingBall`
+— the classic Amiga boing ball bouncing across the world with
+synthesized boing sounds (see README.md for the feature). Three
+lessons from that run apply to any live desktop work:
+
+- *Design variants as per-class state, not shared singletons.* Class
+  variables are shared down the hierarchy and cannot be shadowed by a
+  subclass; class *instance* variables (`classSlots:` in the Pharo 13
+  fluid class definition) give every subclass its own running ball,
+  form cache and process. The green ball was then literally a
+  four-method subclass.
+- *The live world tolerates surgery.* Slots were added to the running
+  class (Shift migrates live instances) and methods recompiled while
+  the animation loops ran — they pick up new compiled methods on the
+  next tick. Restart nothing; just keep the change small.
+- *Do not let tests race the live desktop.* A test asserting on the
+  sound debounce failed because the bouncing balls were mutating the
+  same state from their own processes. Extract decisions into pure
+  methods driven with fabricated inputs, and offer explicit bypasses
+  (e.g. `minimumInterval: 0`) for round-trip tests.
+
 ## Building your own setup
 
 With your own artwork — and this recipe is the whole method, in order:
